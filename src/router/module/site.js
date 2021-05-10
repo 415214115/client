@@ -3,14 +3,14 @@ export const site = {
 	name: "site",
 	component: () => import("@/views/home/index.vue"),
 	meta: {
-		title: '新加坡',
+		title: '站点',
 		icon: '',
 		color: '#F0506E'
 	},
 	children: [
 		{
-			path: "site1",
-			name: "site1",
+			path: "unluckily/:id",
+			name: "unluckily",
 			component: () => import("@/views/home/index.vue"),
 			meta: {
 				title: '待退款',
@@ -19,8 +19,8 @@ export const site = {
 			}
 		},
 		{
-			path: "site2",
-			name: "site2",
+			path: "advertising/:id",
+			name: "advertising",
 			component: () => import("@/views/home/index.vue"),
 			meta: {
 				title: '广告充值',
@@ -29,8 +29,8 @@ export const site = {
 			}
 		},
 		{
-			path: "site3",
-			name: "site3",
+			path: "returnedmoney/:id",
+			name: "returnedmoney",
 			component: () => import("@/views/home/index.vue"),
 			meta: {
 				title: '本店回款',

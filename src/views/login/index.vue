@@ -1,7 +1,6 @@
 <template>
 	<div class="login-container">
 		<el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-1
 			<div class="title-container">
 				<h3 class="title">非鱼后台管理系统登录</h3>
 			</div>

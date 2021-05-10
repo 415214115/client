@@ -9,10 +9,10 @@ Vue.use(VueRouter)
 // import {banner} from './module/banner.js' // 首页
 import {home} from './module/home.js' // 首页
 import {userCenter} from './module/userCenter.js' // 个人中心
-import {invite} from './module/invite.js' // 个人中心
+import {invite} from './module/invite.js' // 邀请返现
 import {site} from './module/site.js' // 站点
 
-// import routerLists from './getMenu.js' // 
+import './getMenu.js' // 
 
 // console.log(routerLists)
 export const routes = [{

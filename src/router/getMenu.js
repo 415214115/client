@@ -1,66 +1,81 @@
 import {home} from './module/home.js' // 首页
 import {userCenter} from './module/userCenter.js' // 个人中心
-import {invite} from './module/invite.js' // 个人中心
+import {invite} from './module/invite.js' // 邀请返现
+import {site} from './module/site.js' // 站点
+// import reconsitution from './reconsitution.js'
+// console.log( new Object(site)   )
 
-
-
-const siteList = ['台湾', '马来西亚', '泰国', '菲律宾', '越南', '新加坡']
+const siteList = [
+	{
+		id: 1,
+		title: '台湾',
+		color: '#F0506E'
+	},
+	{
+		id: 2,
+		title: '马来西亚',
+		color: '#0670E3'
+	},
+	{
+		id: 3,
+		title: '泰国',
+		color: '#5CF908'
+	},
+	{
+		id: 4,
+		title: '菲律宾',
+		color: '#F0506E'
+	},{
+		id: 5,
+		title: '越南',
+		color: '#F0506E'
+	},{
+		id: 6,
+		title: '新加坡',
+		color: '#F0506E'
+	}
+	
+]
 let routerLists = []
-
 
 routerLists.push(home)
 
 
 siteList.forEach(v => {
-	let item = {
-		path: "site",
-		name: "site",
-		component: () => import("@/views/home/index.vue"),
-		meta: {
-			title: '',
-			icon: require('@/assets/image/defaultImg.png'),
-			color: ''
-		},
-		children: [{
-				path: "site1",
-				name: "site1",
-				component: () => import("@/views/home/index.vue"),
-				meta: {
-					title: '待退款',
-					icon: '',
-					color: ''
-				}
-			},
-			{
-				path: "site2",
-				name: "site2",
-				component: () => import("@/views/home/index.vue"),
-				meta: {
-					title: '广告充值',
-					icon: '',
-					color: ''
-				}
-			},
-			{
-				path: "site3",
-				name: "site3",
-				component: () => import("@/views/home/index.vue"),
-				meta: {
-					title: '本店回款',
-					icon: '',
-					color: ''
-				}
-			}
-		]
-	}
-
-	item.meta.title = v
-
-
+	
+	let item = JSON.parse(JSON.stringify(site))
+	item.meta.title = v.title
+	item.meta.color = v.color
+	item.meta.id = v.id
+	item.children.forEach(c=>{
+		c.path = `${c.path.split('/')[0]}/${v.id}`
+		c.meta.id = v.id
+	})
 	routerLists.push(item)
-	// console.log(routerLists)
 })
 routerLists.push(userCenter)
 routerLists.push(invite)
 
-export default routerLists
+function reconsitution(route){
+	route.forEach((page, i) => {
+		if(page.children&&page.children.length > 0){
+			page.children.forEach((child, i)=>{
+				child.path = `/${page.path}/${child.path}`
+				if(child.children){
+					child.children.forEach((childjunior, i)=>{
+						childjunior.path = `/${child.path}/${childjunior.path}`
+						if(childjunior.children){
+							childjunior.children.forEach((v, i)=>{
+								v.path = `/${childjunior.path}/${v.path}`
+							})
+						}
+					})
+				}
+			})
+		}
+	})
+	return route
+}
+const leftMenu = reconsitution(routerLists)
+
+export default leftMenu

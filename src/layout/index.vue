@@ -15,7 +15,8 @@
 		</el-container> -->
 		<el-container>
 			<el-aside>
-				<sliderBar></sliderBar>
+				<!-- <sliderBar></sliderBar> -->
+				<leftSliderBar></leftSliderBar>
 			</el-aside>
 			<el-container>
 				<el-header>
@@ -32,6 +33,7 @@
 </template>
 
 <script>
+	import leftSliderBar from './components/leftSliderBar.vue';
 	import sliderBar from './components/slideBar.vue';
 	import mainPage from '../views/layout.vue';
 	import headers from './components/header.vue';
@@ -41,7 +43,8 @@
 			sliderBar,
 			mainPage,
 			headers,
-			footers
+			footers,
+			leftSliderBar
 		},
 		data() {
 			return {

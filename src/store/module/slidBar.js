@@ -1,12 +1,10 @@
-import Vuex from 'vuex'
 const slidBar = {
 	state: {
 		unfold: false
 	},
 	mutations: {
-		setUnfold(self, data){
-			self.unfold = !self.unfold
-			console.log(self.unfold)
+		setUnfold(state, self){
+			state.unfold = !state.unfold
 		}
 	},
 	actions: {}

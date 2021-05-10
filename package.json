@@ -15,7 +15,8 @@
     "vue": "^2.6.11",
     "vue-router": "^3.5.1",
     "vue-wechat-title": "^2.0.7",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "vuex-along": "^1.2.13"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
