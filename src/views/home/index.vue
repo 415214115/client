@@ -1,48 +1,53 @@
 <template>
-	<el-card>
-		首页
-		<!-- <div slot="header" class="clearfix">
-			<span>用户管理</span>
+	<div class="pageHome">
+		<div class="leftContent">
+			<userInfo></userInfo>
+			<div class="Ptext">系统及功能说明：</div>
+			<el-card>
+				首页
+				<!-- <paginaTion :totalNum="pageData.total" @paginaClick="paginaClick"></paginaTion> -->
+			</el-card>
 		</div>
-		<el-form :inline="true" class="demo-form-inline" :model="searchData">
-			<el-form-item label="用户昵称">
-				<el-input v-model="searchData.userName" placeholder="请输入内容"></el-input>
-			</el-form-item>
-			<el-form-item label="手机号码">
-				<el-input v-model="searchData.phone" placeholder="请输入内容"></el-input>
-			</el-form-item>
-			<el-form-item>
-				<el-button type="primary" icon="el-icon-search" @click="queryFunc">查询</el-button>
-			</el-form-item>
-		</el-form>
-		<el-table :data="pageData.list" border style="width: 100%">
-			<el-table-column prop="date" label="头像">
-				<template slot-scope="scope">
-					<el-image class="bannerImage" :src="scope.row.heardImg" fit="cover"></el-image>
-				</template>
-			</el-table-column>
-			<el-table-column prop="nickName" label="昵称"></el-table-column>
-			<el-table-column prop="phone" label="手机号"></el-table-column>
-		</el-table>
-		<paginaTion :totalNum="pageData.total" @paginaClick="paginaClick"></paginaTion> -->
-	</el-card>
+		<card class="rightCard" title="最新公告" leftIcon="el-icon-s-data" rightIcon="el-icon-more" iconDeg="90" iconColor="#8CA0B3" :bodyStyle="{ padding: '0px' }">
+			<template slot="content">
+				<div class="rightCardContent">
+					<div class="rightCardContentList" v-for="item in 20" :key="item">
+						<i class="el-icon-message-solid rightCardContentIcon"></i>
+						<div class="rightCardContentNew" v-if="isNew">NEW</div>
+						<div class="rightCardContentText" :style="{width: isNew?'50%':'87%'}">
+							<div class="rightCardContentTextTitle">标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题</div>
+							<div class="rightCardContentTextTime">2021-5-10 23:08:50</div>
+						</div>
+					</div>
+				</div>
+				
+			</template>
+			<template slot="footer">
+				<div class="footerPagination">
+					<i class="el-icon-arrow-left"></i><span>1 / 5</span><i class="el-icon-arrow-right"></i>
+				</div>
+			</template>
+		</card>
+		<!-- <div class="rightCard">
+			首页
+		</div> -->
+	</div>
+	
 </template>
 
 <script>
+	import userInfo from './components/userInfo.vue'
 	export default {
+		components:{
+			userInfo
+		},
 		data() {
 			return {
-				pageData: '',
-				searchData: {
-					userName: '',
-					phone: '',
-					pageNum: 1,
-					pageSize: this.$globalData.pageSize
-				},
+				isNew: false
 			}
 		},
 		mounted() {
-			this.getBannerData()
+			
 		},
 		watch: {},
 		methods: {
@@ -52,49 +57,85 @@
 			paginaClick(val){
 				this.searchData.pageNum = val
 				this.getBannerData()
-			},
-			getBannerData() {
-				this.$request.postJson('/back/selectUserInfoList', this.searchData).then(res => {
-					if (res.code == 'succes') {
-						this.pageData = res.data
-					}
-				})
-			},
+			}
 		}
 	}
 </script>
 
 <style scoped="scoped">
-	.bannerImage {
-		width: 50px;
-		height: 50px;
-		border-radius: 5px;
+	.pageHome{
+		display: flex;
+		justify-content: space-between;
+		white-space: nowrap;
+		flex-direction: row;
 	}
-
-	.dialogContent>>>.avatar-uploader .el-upload {
-		border: 1px dashed #d9d9d9;
-		border-radius: 6px;
-		cursor: pointer;
-		position: relative;
+	
+	.rightCard{
+		margin-left: 20px;
+		width: 350px;
 		overflow: hidden;
 	}
-
-	.avatar-uploader .el-upload:hover {
-		border-color: #409EFF;
+	.leftContent{
+		width: 100%;
 	}
-
-	.avatar-uploader-icon {
-		font-size: 28px;
-		color: #8c939d;
-		width: 100px;
-		height: 100px;
-		line-height: 100px;
+	.footerPagination{
+		width: 100%;
+		color: #FFFFFF;
+		background: #1E87F0;
+		height: 50px;
 		text-align: center;
+		line-height: 50px;
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
 	}
-
-	.avatar {
-		width: 100px;
-		height: 100px;
-		display: block;
+	.footerPagination span{
+		word-spacing: 4px;
+	}
+	.footerPagination i{
+		cursor: pointer;
+	}
+	.rightCardContent{
+		padding: 20px;
+	}
+	.rightCardContentList{
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		white-space: nowrap;
+		margin-bottom: 20px;
+		cursor: pointer;
+	}
+	.rightCardContentList:last-child{
+		margin-bottom: 0px;
+	}
+	.rightCardContentNew{
+		border-radius: 64px;
+		background: #F4C872;
+		color: #FFFFFF;
+		margin-right: 15px;
+		font-size: 12px;
+		padding: 2px 5px;
+	}
+	.rightCardContentIcon{
+		margin-right: 15px;
+		color: #8CA0B3;
+	}
+	/* .rightCardContentText{
+		width: 50%;
+	} */
+	.rightCardContentTextTitle{
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.rightCardContentTextTime{
+		font-size: 12px;
+		color: #6D6969;
+		text-align: right;
+	}
+	.Ptext{
+		font-size: 20px;
+		margin-bottom: 20px;
 	}
 </style>

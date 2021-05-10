@@ -53,8 +53,8 @@ siteList.forEach(v => {
 	})
 	routerLists.push(item)
 })
-routerLists.push(userCenter)
 routerLists.push(invite)
+routerLists.push(userCenter)
 
 function reconsitution(route){
 	route.forEach((page, i) => {

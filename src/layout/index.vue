@@ -1,18 +1,5 @@
 <template>
 	<div class="content">
-		<!-- <el-container>
-		  <el-header><headers></headers></el-header>
-		   <el-container>
-		      <el-aside>
-				  <sliderBar></sliderBar>
-			  </el-aside>
-		      <el-main>
-				  <transition name="fade" mode="out-in">
-				  	<mainPage></mainPage>
-				  </transition>
-			  </el-main>
-		    </el-container>
-		</el-container> -->
 		<el-container>
 			<el-aside>
 				<!-- <sliderBar></sliderBar> -->
@@ -90,9 +77,8 @@
 		background-color: #f0f0f0;
 		color: #333;
 		overflow: auto;
-		height: calc(100vh - 50px);
+		height: calc(100vh - 90px);
 	}
-
 	.section {
 		position: relative;
 		left: 0;
@@ -101,8 +87,4 @@
 		margin: auto;
 		margin-top: 20px;
 	}
-	/* .el-container.is-vertical{
-		min-width: 1700px;
-		min-height: 100vh;
-	} */
 </style>

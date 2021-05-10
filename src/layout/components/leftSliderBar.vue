@@ -85,7 +85,7 @@
 				const fItem = this.navSliderBar.filter(v => {
 					return v.meta.id == cItem.id
 				})
-				let data = []
+				let data = ['站点选择']
 				data.push(fItem[0].meta.title)
 				data.push(cItem.title)
 				this.$store.commit('setBreadcrumb', data)

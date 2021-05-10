@@ -27,6 +27,8 @@ Vue.use(VueWechatTitle)
 // 全局分页组件
 import pagination from './components/pagination'
 Vue.component('paginaTion',pagination)
+import card from './components/card'
+Vue.component('card',card)
 new Vue({
 	router,
 	store,
