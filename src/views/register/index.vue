@@ -8,32 +8,16 @@
 			<div class="loginForm">
 				<div class="vipLogins" v-show="isVipLogin">
 					<!-- 会员登陆 -->
-					<div class="noVipTip">不是会员？<span @click="registerVip">【立即注册】</span></div>
+					<div class="noVipTip">已是会员？<span @click="toLogin">【立即登录】</span></div>
 					<div class="loginFuncBox">
-						<div class="loginWay">
-							<div class="loginWayBtn selectWay">密码登录</div>
-							<div class="loginWayBtn">短信登录</div>
+						<div class="stepBox">
+							<div class="step step1 reach">1</div>
+							<div class="step step2">2</div>
+							<div class="step step3">3</div>
 						</div>
-						<pwdLogin></pwdLogin>
 						<!-- <msgLogin></msgLogin> -->
-						<div class="loginTip">
-							<span>忘记密码？</span>
-							<span>操作员登录入口</span>
-						</div>
-					</div>
-				</div>
-				<div class="operator" v-show="!isVipLogin">
-					<!-- 操作员登陆 -->
-					<div class="noVipTip">操作员登录</div>
-					<div class="loginFuncBox">
-						<div class="loginWay">
-							<div class="loginWayBtn selectWay">密码登录</div>
-						</div>
+						<!-- <pwdLogin></pwdLogin> -->
 						<operatorLogin></operatorLogin>
-						<div class="loginTip">
-							<span></span>
-							<span>会员登录入口</span>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -66,8 +50,8 @@
 			
 		},
 		methods: {
-			registerVip(){
-				this.$router.push('/register')
+			toLogin(){
+				this.$router.push('/login')
 			}
 		}
 	}
@@ -149,53 +133,75 @@
 					z-index: 8;
 					top: 20rem;
 					width: 35rem;
-					.loginWay{
-						font-size: 1.8rem;
-						font-weight: bold;
-						text-align: left;
-						.loginWayBtn{
-							display: inline-block;
-							margin-right: 5rem;
-							width: 9rem;
-							text-align: center;
-							line-height: 3.6rem;
-							position: relative;
-							cursor: pointer;
-						}
-						.selectWay::before{
-							content: '';
-							position: absolute;
-							width: 100%;
-							height: 0.4rem;
-							background: #00A0E9;
-							bottom: -2px;
-							left: 0;
-						}
-					}
-					.loginTip{
-						padding: 0 1.5rem;
+					.stepBox{
 						display: flex;
 						justify-content: space-between;
-						font-size: 1.2rem;
-						span{
-							cursor: pointer;
-							&:first-child{
-								color: #ED3B43;
+						.step{
+							width: 3.8rem;
+							height: 3.8rem;
+							border-radius: 100%;
+							text-align: center;
+							line-height: 3.8rem;
+							color: #FFFFFF;
+							font-size: 1.8rem;
+							font-weight: bold;
+							background: #BFBFBF;
+							position: relative;
+							&::after{
+								content: '';
+								position: absolute;
+								width: 9rem;
+								height: 0.2rem;
+								background: #00A0E9;
+								right: -10.5rem;
+								top: 50%;
+								margin-top: -0.1rem;
 							}
 							&:last-child{
-								color: #383838;
+								&::after{
+									display: none;
+								}
+							}
+							&::before{
+								position: absolute;
+								font-size: 1.4rem;
+								font-weight: bold;
+								color: #333333;
+								bottom: -4rem;
+								white-space: nowrap;
+								transform: translateX(-50%);
+								left: 50%;
+							}
+							&:nth-child(1){
+								&::before{
+									content: '验证手机';
+								}
+							}
+							&:nth-child(2){
+								&::before{
+									content: '信息填写';
+								}
+							}
+							&:nth-child(3){
+								&::before{
+									content: '设置密码';
+								}
 							}
 						}
+						.reach{
+							background: #EE7B81;
+						}
 					}
+					
 				}
 			// }
 			
-			.operator{
-				.noVipTip{
-					top: 15rem;
-					right: 7rem;
-				}
-			}
+			// .operator{
+			// 	.noVipTip{
+			// 		top: 15rem;
+			// 		right: 7rem;
+			// 	}
+			// }
 		}
 	}
 	

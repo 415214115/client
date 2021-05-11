@@ -1,14 +1,22 @@
 <template>
 	<div class="loginBoxs">
 		<div class="inputItem">
-			<i class="el-icon-user icon"></i>
-			<input class="inputs" type="text" placeholder="用户名/手机号" maxlength="11">
+			<i class="el-icon-lock icon"></i>
+			<input class="inputs" type="password" placeholder="新密码" maxlength="11">
 		</div>
 		<div class="inputItem" style="margin-top: 4rem;">
 			<i class="el-icon-lock icon"></i>
-			<input class="inputs" type="password"  placeholder="登录密码">
+			<input class="inputs" type="password"  placeholder="再次输入">
 		</div>
-		<div class="login" @click="login">立 即 登 录</div>
+		<div class="accept">
+			<el-checkbox v-model="checked">
+				<span>点击“阅读并接受”《某某》协议</span>
+			</el-checkbox>
+		</div>
+		<div class="btnBox">
+			<div class="login">返回上一步</div>
+			<div class="login">提交</div>
+		</div>
 	</div>
 </template>
 
@@ -20,10 +28,7 @@
 			}
 		},
 		methods:{
-			login(){
-				sessionStorage.setItem('token','yes')
-				this.$router.replace('/index')
-			}
+			
 		}
 	}
 </script>
@@ -43,14 +48,29 @@
 				margin-right: 2rem;
 				color: #999999;
 			}
+			.iconImg{
+				width: 2.6rem;
+			}
 			.inputs{
 				border: none;
 				outline: none;
 				width: 29rem;
 			}
 		}
+		.accept{
+			margin-top: 3rem;
+			text-align: left;
+			span{
+				font-size: 1.2rem;
+				color: #999999;
+			}
+		}
+		.btnBox{
+			display: flex;
+			justify-content: space-between;
+		}
 		.login{
-			width: 100%;
+			width: 46%;
 			background: #34A1FF;
 			color: #FBF9FA;
 			font-size: 1.8rem;

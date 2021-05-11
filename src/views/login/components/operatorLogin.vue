@@ -2,16 +2,12 @@
 	<div class="loginBoxs">
 		<div class="inputItem">
 			<i class="el-icon-user icon"></i>
-			<input class="inputs" type="text" placeholder="用户名/手机号" maxlength="11">
+			<input class="inputs" type="text" placeholder="用户名" maxlength="11">
 		</div>
-		<div class="getCodeBox" style="margin-top: 4rem;">
-			<div class="inputItem">
-				<i class="el-icon-lock icon"></i>
-				<input class="inputs" type="password"  placeholder="验证码">
-			</div>
-			<div class="getCode">获   取</div>
+		<div class="inputItem" style="margin-top: 4rem;">
+			<i class="el-icon-lock icon"></i>
+			<input class="inputs" type="password"  placeholder="登录密码">
 		</div>
-		
 		<div class="login">立 即 登 录</div>
 	</div>
 </template>
@@ -39,7 +35,6 @@
 				outline: none;
 				width: 29rem;
 			}
-			
 		}
 		.login{
 			width: 100%;
@@ -54,24 +49,5 @@
 			cursor: pointer;
 		}
 	}
-	.getCodeBox{
-		width: 100%;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		.inputItem{
-			
-			width: 21rem;
-		}
-		.getCode{
-			width: 12rem;
-			height: 4rem;
-			text-align: center;
-			line-height: 4rem;
-			background: #82C5FE;
-			color: #FFFFFF;
-			font-size: 2.2rem;
-			cursor: pointer;
-		}
-	}
+	
 </style>

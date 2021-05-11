@@ -25,6 +25,15 @@ export const routes = [{
 		component: () => import('@/views/login/index.vue')
 	},
 	{
+			path: '/register',
+			name: 'register',
+			meta: {
+				title: '注册',
+				icon: ''
+			},
+			component: () => import('@/views/register/index.vue')
+		},
+	{
 		path: '/',
 		name: 'layout',
 		component: () => import('@/layout/index.vue'),

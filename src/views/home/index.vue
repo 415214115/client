@@ -50,7 +50,10 @@
 	}
 
 	.Ptext {
-		font-size: 20px;
+		font-size: 2rem;
 		margin-bottom: 2rem;
+	}
+	.leftContent{
+		width: 100%;
 	}
 </style>

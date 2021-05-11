@@ -12,7 +12,7 @@
 			<div class="getCode">获   取</div>
 		</div>
 		
-		<div class="login">立 即 登 录</div>
+		<div class="login">下一步</div>
 	</div>
 </template>
 
