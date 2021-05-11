@@ -1,5 +1,5 @@
 <template>
-	<el-pagination @current-change="handleCurrentChange" :current-page="currentPage"
+	<el-pagination background @current-change="handleCurrentChange" :current-page="currentPage"
 	  :page-size="pageSize" :layout="layouts" :total="totalNum">
 	</el-pagination>
 </template>
@@ -15,7 +15,7 @@
 			return {
 				currentPage: 1,
 				pageSize: $globalData.pageSize,
-				layouts: 'total, prev, pager, next, jumper',
+				layouts: 'prev, pager, next',
 				pageTotal: 400,
 			}
 		},
@@ -31,7 +31,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 	.el-pagination {
-		text-align: right;
-		margin-top: 20px;
+		text-align: center;
+		margin-top: 2rem;
 	}
 </style>

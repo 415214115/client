@@ -7,9 +7,19 @@
 		</div> -->
 		<div class="headerCenter" :style="{width:!$store.state.slidBar.unfold?'calc(1920px - 360px)':'calc(1920px - 43px)'}">
 			<breadcrumb></breadcrumb>
+			<div class="rightInfos">
+				<div class="rightInfosItem">
+					<img src="../../assets/image/home/rmb.png" alt="">
+					999999.99
+				</div>
+				<div class="rightInfosItem">
+					<img src="../../assets/image/home/user.png" alt="">
+					呱呱
+				</div>
+			</div>
 			<!-- 欢迎，{{userInfo.nickName || userInfo.name || userInfo.phone}} -->
 			<!-- <span>个人中心</span> -->
-			<span @click="loginOut">【退出登录】</span>
+			<!-- <span @click="loginOut">【退出登录】</span> -->
 		</div>
 	</div>
 </template>
@@ -50,7 +60,7 @@
 	.headers{
 		color: #333;
 		text-align: right;
-		line-height: 90px;
+		line-height: 9rem;
 		width: 100%;
 		height: 100%;
 		/* background: #FFFFFF; */
@@ -73,7 +83,7 @@
 		height: 30px
 	} */
 	.headers span{
-		margin-left: 20px;
+		margin-left: 2rem;
 		cursor: pointer;
 	}
 	.headers span:hover{
@@ -81,16 +91,37 @@
 	}
 	
 	.unfold{
-		width: 380px;
+		width: 38rem;
 	}
 	.pack{
-		width: 63px;
+		width: 6.3rem;
 	}
 	.headerCenter{
 		display: flex;
 		justify-content: space-between;
 		white-space: nowrap;
 		align-items: center;
-		margin-left: 20px;
+		margin-left: 2rem;
+	}
+	.rightInfos{
+		display: flex;
+		justify-content: space-between;
+		white-space: nowrap;
+		align-items: center;
+		font-size: 1.8rem;
+	}
+	.rightInfosItem{
+		display: flex;
+		justify-content: space-between;
+		white-space: nowrap;
+		align-items: center;
+		margin-left: 2rem;
+	}
+	.rightInfosItem:last-child{
+		font-size: 1.6rem;
+	}
+	.rightInfos img{
+		height: 3.6rem;
+		margin-right: 1.5rem;
 	}
 </style>

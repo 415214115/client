@@ -1,33 +1,82 @@
 <template>
 	<div class="login-container">
-		<el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
+		<div class="loginBox">
+			<div class="bgoverlay1">
+				<div class="systemName">卖家服务系统</div>
+				<div class="bgoverlay2"></div>
+			</div>
+			<div class="loginForm">
+				<div>
+					<div class="noVipTip">不是会员？<span>【立即注册】</span></div>
+					<div class="loginFuncBox">
+						<div class="loginWay">
+							<div class="loginWayBtn selectWay">密码登录</div>
+							<div class="loginWayBtn">短信登录</div>
+						</div>
+						<!-- <pwdLogin></pwdLogin> -->
+						<msgLogin></msgLogin>
+						<div class="loginTip">
+							<span>忘记密码？</span>
+							<span>操作员登录入口</span>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+		</div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<!-- <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 			<div class="title-container">
 				<h3 class="title">非鱼后台管理系统登录</h3>
 			</div>
 
 			<el-form-item prop="name">
-				<!-- <i class="el-icon-user"></i> -->
 				<el-input ref="username" v-model="loginForm.name" placeholder="Username" name="username" type="text" tabindex="1"
 				 autocomplete="on" :validate-event="false">
 				 <i slot="prefix" class="el-icon-user"></i>
 				 </el-input>
 			</el-form-item>
 			<el-form-item prop="password">
-				<!-- <i class="el-icon-lock"></i> -->
 				<el-input ref="password" v-model="loginForm.password" placeholder="Password" name="password" :type="pwdIsShow?'password':'text'" tabindex="1"
 				 autocomplete="on" :validate-event="false" >
 				 <i slot="prefix" class="el-icon-lock"></i>
-				 <!-- <i slot="suffix" class="el-icon-view" @click="pwdIsShow = !pwdIsShow"></i> -->
 				 </el-input>
 			</el-form-item>
 			<el-button type="primary" class="loginBtn" :loading="isLoding" @click="loginApp('loginForm')">Login</el-button>
-		</el-form>
+		</el-form> -->
 	</div>
 </template>
 
 <script>
+	import pwdLogin from './components/pwdLogin.vue'
+	import msgLogin from './components/msgLogin.vue'
 	export default {
 		name: 'Login',
+		components:{
+			pwdLogin,
+			msgLogin
+		},
 		data() {
 			const validateUsername = (rule, value, callback) => {
 				if (!value) {
@@ -92,7 +141,7 @@
 	}
 </script>
 
-<style scoped="scoped">
+<style scoped="scoped" lang="scss">
 	.login-container {
 		/* background-color: #2d3a4b; */
 		width: 100%;
@@ -104,6 +153,153 @@
 		background-position: 26% 50%;
 		background-size: 159% 289%;
 	}
+	.loginBox{
+		width: 138rem;
+		height: 80rem;
+		background-image: url(../../assets/image/login/bg3.png);
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		margin: auto;
+		z-index: 5;
+		.bgoverlay1{
+			width: 74rem;
+			height: 52rem;
+			background-image: url(../../assets/image/login/bg1.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			position: absolute;
+			left: 15rem;
+			bottom: 14rem;
+			z-index: 6;
+			.systemName{
+				position: absolute;
+				color: #34A1FF;
+				font-size: 3.6rem;
+				left: 7.5rem;
+				top: 0.5rem;
+			}
+			.bgoverlay2{
+				width: 65rem;
+				height: 46rem;
+				background-image: url(../../assets/image/login/bg2.png);
+				background-repeat: no-repeat;
+				background-size: 100% 100%;
+				position: absolute;
+				left: 1.7rem;
+				bottom: 0rem;
+				z-index: 7;
+			}
+		}
+		.loginForm{
+			height: 100%;
+			position: absolute;
+			right: 10rem;
+			width: 40rem;
+			.noVipTip{
+				position: absolute;
+				top: 7rem;
+				right: 4rem;
+				color: #302C2C;
+				font-size: 1.6rem;
+				span{
+					cursor: pointer;
+					color: #ED3B43;
+				}
+			}
+			.loginFuncBox{
+				position: absolute;
+				z-index: 8;
+				top: 20rem;
+				width: 35rem;
+				.loginWay{
+					font-size: 1.8rem;
+					font-weight: bold;
+					text-align: left;
+					.loginWayBtn{
+						display: inline-block;
+						margin-right: 5rem;
+						width: 9rem;
+						text-align: center;
+						line-height: 3.6rem;
+						position: relative;
+						cursor: pointer;
+					}
+					.selectWay::before{
+						content: '';
+						position: absolute;
+						width: 100%;
+						height: 0.4rem;
+						background: #00A0E9;
+						bottom: -2px;
+						left: 0;
+					}
+				}
+				.loginTip{
+					padding: 0 1.5rem;
+					display: flex;
+					justify-content: space-between;
+					font-size: 1.2rem;
+					span{
+						cursor: pointer;
+						&:first-child{
+							color: #ED3B43;
+						}
+						&:last-child{
+							color: #383838;
+						}
+					}
+				}
+			}
+			
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	.login-form{
 		width: 400px;
 		position: relative;

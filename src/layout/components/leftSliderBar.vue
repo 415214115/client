@@ -6,7 +6,7 @@
 			<i class="elIcon" :class="!$store.state.slidBar.unfold?'el-icon-s-fold':'el-icon-s-unfold'"
 				:title="!$store.state.slidBar.unfold?'收起':'展开'" @click="setUnfold"></i>
 		</div>
-		<el-scrollbar wrap-class="scrollbar-wrapper" :style="{width: !$store.state.slidBar.unfold?'380px':'63px'}">
+		<el-scrollbar wrap-class="scrollbar-wrapper" :style="{width: !$store.state.slidBar.unfold?'38rem':'6.3rem'}">
 			<el-menu 
 				:default-active="$route.path" 
 				text-color="#fff" 
@@ -19,7 +19,7 @@
 				<div  v-for="(item, index) in navSliderBar" :key="index">
 					<el-submenu :index="`${item.path}${index}`" v-if="item.children">
 						<template slot="title">
-							<img class="menuLftIcon" :src="item.meta.icon" v-if="item.meta.icon" style="width: 20px;height: 20px;" alt="">
+							<img class="menuLftIcon" :src="item.meta.icon" v-if="item.meta.icon" style="width: 2rem;height: 2rem;" alt="">
 							<div v-else class="menuTag" :style="{background:item.meta.color}"></div>
 							<span slot="title">{{ item.meta.title }}</span>
 						</template>
@@ -27,26 +27,26 @@
 							<div v-if="list.children">
 								<el-submenu :index="list.path">
 									<template slot="title">
-										<img class="menuLftIcon" :src="list.meta.icon" v-if="list.meta.icon" style="width: 20px;height: 20px;" alt="">
+										<img class="menuLftIcon" :src="list.meta.icon" v-if="list.meta.icon" style="width: 2rem;height: 2rem;" alt="">
 										<div v-else class="menuTag" :style="{background:list.meta.color}"></div>
 										<span slot="title">{{ list.meta.title }}</span>
 									</template>
 									<el-menu-item v-for="listItem in list.children" :key="listItem.name" v-show="!listItem.hidden" :index="`${listItem.path}`" :class="$route.path==listItem.path?'el-menubefore':''">
-										<img class="menuLftIcon" :src="listItem.meta.icon" v-if="listItem.meta.icon" style="width: 20px;height: 20px;" alt="">
+										<img class="menuLftIcon" :src="listItem.meta.icon" v-if="listItem.meta.icon" style="width: 2rem;height: 2rem;" alt="">
 										<div v-else class="menuTag" :style="{background:listItem.meta.color}"></div><span slot="title">{{ listItem.meta.title }}</span>
 									</el-menu-item>
 								</el-submenu>
 							</div>
 							<div v-else>
 								<el-menu-item :index="`${list.path}`" v-show="!list.hidden" :class="$route.path==list.path?'el-menubefore':''" @click="submenuItemClick(list)">
-									<img class="menuLftIcon" :src="list.meta.icon" v-if="list.meta.icon" style="width: 20px;height: 20px;" alt="">
+									<img class="menuLftIcon" :src="list.meta.icon" v-if="list.meta.icon" style="width: 2rem;height: 2rem;" alt="">
 									<div v-else class="menuTag" :style="{background:list.meta.color}"></div><span slot="title">{{ list.meta.title }}</span>
 								</el-menu-item>
 							</div>
 						</div>
 					</el-submenu>
 					<el-menu-item :index="item.path" v-else v-show="!item.hidden" :class="$route.path==item.path?'el-menubefore':''" @click="menuItemClick(item)">
-						<img class="menuLftIcon" :src="item.meta.icon" v-if="item.meta.icon" style="width: 20px;height: 20px;" alt="">
+						<img class="menuLftIcon" :src="item.meta.icon" v-if="item.meta.icon" style="width: 2rem;height: 2rem;" alt="">
 						<div v-else class="menuTag" :style="{background:item.meta.color}"></div>
 						<span slot="title">{{ item.meta.title }}</span>
 					</el-menu-item>
@@ -110,7 +110,7 @@
 	}
 
 	.logoBox {
-		height: 50px;
+		height: 5rem;
 		width: 100%;
 		overflow: hidden;
 		padding: 0 20px;
@@ -119,7 +119,7 @@
 		justify-content: space-around;
 		flex-wrap: nowrap;
 		color: #FFFFFF;
-		line-height: 50px;
+		line-height: 5rem;
 		font-weight: 600;
 		font-family: "楷体";
 		font-size: 15px;
@@ -127,8 +127,8 @@
 
 	.logoImg {
 		/* width: 30px; */
-		height: 20px;
-		margin-top: 15px;
+		height: 2rem;
+		margin-top: 1.5rem;
 	}
 
 	.slideBar>>>.el-scrollbar__wrap {
@@ -137,15 +137,15 @@
 	}
 
 	.slideBar>>>.scrollbar-wrapper {
-		margin-right: -19px !important;
+		margin-right: -1.9rem !important;
 		/* border-right: 1px solid #304156; */
 		/* background-color: #304156; */
-		height: 100%;
+		height: calc(100vh - 9rem + 17px);
 		/* transition: all 2s; */
 	}
 
 	.el-scrollbar {
-		height: calc(100% - 90px);
+		height: calc(100vh - 9rem + 17px) !important;
 		/* width: 100% !important; */
 		transition: all .4s;
 	}
@@ -156,22 +156,22 @@
 
 	.menuLftIcon {
 		display: inline-block;
-		margin-right: 35px;
-		width: 35px;
-		height: 35px;
+		margin-right: 3.5rem;
+		width: 3.5rem;
+		height: 3.5rem;
 	}
 
 	.unfold {
-		width: 380px;
+		width: 38rem;
 	}
 
 	.pack {
-		width: 63px;
+		width: 6.3rem;
 	}
 
 	.el-menu .titleIcon {
 		color: #ffffff;
-		margin-right: 5px;
+		margin-right: 0.5rem;
 	}
 
 	.el-menu {
@@ -200,7 +200,7 @@
 	}
 
 	.el-menubefore::before {
-		width: 5px;
+		width: 0.5rem;
 		height: 100%;
 		background: #1E87F0;
 		left: 0;
@@ -213,7 +213,7 @@
 	background-color: #2B2F3A;
 } */
 	.el-submenu>>>.el-submenu__icon-arrow {
-		right: 30px;
+		right: 3rem;
 	}
 
 	.leftLogo {
@@ -221,14 +221,14 @@
 		align-items: center;
 		color: #FFFFFF;
 		font-size: 28px;
-		padding-left: 20px;
-		height: 90px;
+		padding-left: 2rem;
+		height: 9rem;
 		background: #1E87F0;
 		transition: all .4s;
 	}
 
 	.leftLogoImg {
-		height: 30px
+		height: 3rem
 	}
 
 	.elIcon {
@@ -236,11 +236,11 @@
 	}
 
 	.menuTag {
-		width: 14px;
-		height: 14px;
+		width: 1.4rem;
+		height: 1.4rem;
 		display: inline-block;
-		margin-right: 38px;
-		margin-left: 3px;
+		margin-right: 3.8rem;
+		margin-left: 0.3rem;
 		border-radius: 100%;
 	}
 </style>

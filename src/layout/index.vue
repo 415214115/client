@@ -11,7 +11,7 @@
 				</el-header>
 				<el-main>
 					<transition name="fade" mode="out-in">
-						<mainPage></mainPage>
+						<mainPage style="margin-bottom: 20px;"></mainPage>
 					</transition>
 				</el-main>
 			</el-container>
@@ -59,7 +59,7 @@
 	.el-header {
 		/* box-shadow: 0px 1px 10px 1px rgba(0, 0, 0, 0.3); */
 		/* border-bottom: 1px solid rgba(0, 0, 0, 0.1); */
-		height: 90px !important;
+		height: 9rem !important;
 		background-color: #FFFFFF !important;
 		padding: 0;
 		background: #1E87F0;
@@ -77,14 +77,14 @@
 		background-color: #f0f0f0;
 		color: #333;
 		overflow: auto;
-		height: calc(100vh - 90px);
+		height: calc(100vh - 9rem);
 	}
 	.section {
 		position: relative;
 		left: 0;
 		right: 0;
-		width: 1200px;
+		width: 120rem;
 		margin: auto;
-		margin-top: 20px;
+		margin-top: 2rem;
 	}
 </style>

@@ -20,11 +20,12 @@ export default {
 		margin: 0;
 		padding: 0;
 		box-sizing: border-box;
+		font-family: Microsoft YaHei;
 	}
 	#app {
 		width: 100%;
 		height: 100vh;
-		font-size: 14px;
+		font-size: 1.4rem;
 		/* background: #E7E8EC; */
 		min-width: 1366px;
 		overflow-y: hidden;
@@ -47,6 +48,6 @@ export default {
 		margin-bottom: 0 !important;
 	} */
 	.el-form-item .el-input{
-		width: 215px;
+		width: 21.5rem;
 	}
 </style>
