@@ -60,13 +60,14 @@
 	export default {
 		data() {
 			return {
-				navSliderBar: this.$store.state.leftMenu,
+				navSliderBar: this.$store.state.menu.leftMenu,
 				// settings: this.$store.state.layOutSetTing
+				// navSliderBar: ''
 			}
 		},
 		mounted() {
 			// this.navSliderBar = this.$store.state.routers
-			// console.log(this.navSliderBar)
+			// console.log(this.$store.state.menu)
 		},
 		computed: {
 

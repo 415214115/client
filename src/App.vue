@@ -34,11 +34,18 @@ export default {
 		display: block;
 		object-fit: cover;
 	}
+    .el-table{
+                    border-radius: 3px;
+                }
+    .el-table th{
+        text-align: center !important;
+        color: #3B3939 !important;
+    }
 	.flex{
 		display: flex;
 	}
 	.fade-enter-active, .fade-leave-active {
-	  transition: all 2s;
+	  transition: all .2s;
 	}
 	.fade-enter, .fade-leave-to {
 	  /* margin-right: 100vw; */

@@ -25,7 +25,7 @@
 					</div>
 					<div class="btnS nth1">充  值</div>
 					<div class="btnS nth2">提  现</div>
-					<div class="btnS nth3">收支账单</div>
+					<div class="btnS nth3" @click="toBill">收支账单</div>
 				</div>
 			</div>
 		</template>
@@ -33,6 +33,19 @@
 </template>
 
 <script>
+export default{
+    data(){
+        return{
+
+        }
+    },
+    methods:{
+        toBill(){
+            // console.log()
+            this.$router.push('/home/bill')
+        }
+    }
+}
 </script>
 
 <style scoped="scoped">
@@ -67,7 +80,7 @@
 		margin-right: 3.5rem;
 	}
 	.rightInfo{
-		width: 100%;
+		width: 70%;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

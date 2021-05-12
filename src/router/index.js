@@ -4,13 +4,17 @@ import Layout from '../views/layout'
 
 import reconsitution from './reconsitution.js'
 Vue.use(VueRouter)
-
+import store from '../store/index.js'
 // import module
 // import {banner} from './module/banner.js' // 首页
 import {home} from './module/home.js' // 首页
 import {userCenter} from './module/userCenter.js' // 个人中心
 import {invite} from './module/invite.js' // 邀请返现
-import {site} from './module/site.js' // 站点
+import {vipSite} from './module/vipSite.js' // 站点 会员
+import {operatorSite} from './module/operatorSite.js' // 站点操作员
+import {bill} from './module/bill.js' // 收支账单
+
+
 
 import './getMenu.js' // 
 
@@ -40,7 +44,9 @@ export const routes = [{
 		redirect: '/index',
 		children: [
 			home,
-			site,
+            bill,
+			vipSite,
+            operatorSite,
 			invite,
 			userCenter
 		]
@@ -51,9 +57,12 @@ export const routes = [{
 
 
 // routes = routes.concat(classifyRouter)
-export const editRouter = reconsitution(routes)
+const editRouter = reconsitution(routes)
+
+store.commit('setRouters', editRouter)
+
 const router = new VueRouter({
-	// mode: 'history',
+	mode: 'history',
 	routes
 })
 

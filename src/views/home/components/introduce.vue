@@ -65,7 +65,7 @@
 				width: 100%;
 				margin-bottom: 1.6rem;
 				font-size: 1.8rem;
-				height: 4.5rem;
+				height: 5rem;
 				word-break: break-all;
 				      display: -webkit-box;
 				      -webkit-box-orient: vertical;

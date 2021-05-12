@@ -15,13 +15,13 @@ getRouter()
 /**
  * 遍历动态菜单生成导航
  */
-import leftMenu from '../router/getMenu.js'
- let menus = leftMenu
+import menuList from '../router/getMenu.js'
+ let menus = menuList
 // console.log(leftMenu)
 
 
 
 export {
 	routerList,
-	leftMenu
+	menus
 }

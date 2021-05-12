@@ -1,6 +1,6 @@
-export const site = {
-	path: "site",
-	name: "site",
+export const operatorSite = {
+	path: "operatorsite",
+	name: "operatorsite",
 	component: () => import("@/views/home/index.vue"),
 	meta: {
 		title: '站点',
@@ -9,8 +9,8 @@ export const site = {
 	},
 	children: [
 		{
-			path: "unluckily/:id",
-			name: "unluckily",
+			path: "operatorunluckily/:id",
+			name: "operatorunluckily",
 			component: () => import("@/views/home/index.vue"),
 			meta: {
 				title: '待退款',
@@ -19,8 +19,8 @@ export const site = {
 			}
 		},
 		{
-			path: "advertising/:id",
-			name: "advertising",
+			path: "operatoradvertising/:id",
+			name: "operatoradvertising",
 			component: () => import("@/views/home/index.vue"),
 			meta: {
 				title: '广告充值',
@@ -29,8 +29,8 @@ export const site = {
 			}
 		},
 		{
-			path: "returnedmoney/:id",
-			name: "returnedmoney",
+			path: "operatorreturnedmoney/:id",
+			name: "operatorreturnedmoney",
 			component: () => import("@/views/home/index.vue"),
 			meta: {
 				title: '本店回款',
