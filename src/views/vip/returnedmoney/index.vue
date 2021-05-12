@@ -1,6 +1,6 @@
 <template>
    <div class="unluckily">
-	   <topMsg types="1"></topMsg>
+	   <topMsg types="3"></topMsg>
        <div class="cardTabel">
            <el-card>
                <div slot="header">
@@ -8,52 +8,48 @@
                    <el-button type="warning" size="mini" class="issueBtn">发布需求</el-button>
                </div>
                <div class="handleBox">
-                   <div class="handleList selects">进行中</div>
-                   <div class="handleList">已反馈</div>
-                   <div class="handleList">已完结</div>
-                   <div class="handleList">有异议</div>
+				   <div class="handleList" v-for="(item, index) in navList" :key="index" :class="navIndex==index?'selects':''" @click="selectorNav(index)">{{ item }}</div>
                </div>
-               <el-table :data="tableData" border style="width: 100%;margin-top: 2rem;">
-                    <el-table-column prop="date" label="订单编号"></el-table-column>
-                    <el-table-column prop="date" label="收款人姓名"></el-table-column>
-                    <el-table-column prop="date" label="银行名称/代码"></el-table-column>
-                    <el-table-column prop="date" label="退款金额"></el-table-column>
-                    <el-table-column prop="date" label="支付费用"></el-table-column>
-                    <el-table-column prop="date" label="订单计时"></el-table-column>
-                    <el-table-column prop="date" label="操作"></el-table-column>
-                    <el-table-column prop="date" label="反馈截图"></el-table-column>
-                    <el-table-column prop="date" label="备注"></el-table-column>
-                </el-table>
-
-		        <paginaTion :totalNum="0" @paginaClick="paginaClick"></paginaTion>
+              <orderTabel v-if="navIndex == 0"></orderTabel>
+			  <proceedTabel v-if="navIndex == 1"></proceedTabel>
+			  <statementTabel v-if="navIndex == 2"></statementTabel>
+			  <disputeTabel v-if="navIndex == 3"></disputeTabel>
+			  <endTabel v-if="navIndex == 4"></endTabel>
            </el-card>
        </div>
    </div>
 </template>
 <script>
 	import topMsg from '../components/topMsg.vue'
+	import orderTabel from './components/orderTabel.vue'
+	import proceedTabel from './components/proceedTabel.vue'
+	import statementTabel from './components/statementTabel.vue'
+	import disputeTabel from './components/disputeTabel.vue'
+	import endTabel from './components/endTabel.vue'
 export default {
 	components:{
-		topMsg
+		topMsg,
+		orderTabel,
+		proceedTabel,
+		statementTabel,
+		disputeTabel,
+		endTabel
 	},
     data(){
         return{
             inputVal: 200,
-            tableData: [{}]
-        }
-    },
-    computed:{
-        result(){
-            const money = Number(this.inputVal) + 15
-            const parities = money / 4
-            const data = parities + 6
-            return data
+            tableData: [{}],
+			navList:['回款订单','进行中', '待结算', '争议中', '已完结'],
+			navIndex: 0
         }
     },
     methods:{
         paginaClick(val){
 
-        }
+        },
+		selectorNav(i){
+			this.navIndex = i
+		}
     }
 }
 </script>

@@ -22,7 +22,7 @@ export const vipSite = {
 		{
 			path: "vipadvertising/:id",
 			name: "vipadvertising",
-			component: () => import("@/views/home/index.vue"),
+			component: () => import("@/views/vip/advertising/index.vue"),
 			meta: {
 				title: '广告充值',
 				icon: '',
@@ -32,7 +32,7 @@ export const vipSite = {
 		{
 			path: "vipreturnedmoney/:id",
 			name: "vipreturnedmoney",
-			component: () => import("@/views/home/index.vue"),
+			component: () => import("@/views/vip/returnedmoney/index.vue"),
 			meta: {
 				title: '本店回款',
 				icon: '',

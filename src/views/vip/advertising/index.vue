@@ -1,6 +1,6 @@
 <template>
    <div class="unluckily">
-	   <topMsg types="1"></topMsg>
+	   <topMsg types="2"></topMsg>
        <div class="cardTabel">
            <el-card>
                <div slot="header">
@@ -15,9 +15,9 @@
                </div>
                <el-table :data="tableData" border style="width: 100%;margin-top: 2rem;">
                     <el-table-column prop="date" label="订单编号"></el-table-column>
-                    <el-table-column prop="date" label="收款人姓名"></el-table-column>
-                    <el-table-column prop="date" label="银行名称/代码"></el-table-column>
-                    <el-table-column prop="date" label="退款金额"></el-table-column>
+                    <el-table-column prop="date" label="店铺账号"></el-table-column>
+                    <el-table-column prop="date" label="店铺密码"></el-table-column>
+                    <el-table-column prop="date" label="充值金额"></el-table-column>
                     <el-table-column prop="date" label="支付费用"></el-table-column>
                     <el-table-column prop="date" label="订单计时"></el-table-column>
                     <el-table-column prop="date" label="操作"></el-table-column>
