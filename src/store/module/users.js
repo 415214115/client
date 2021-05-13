@@ -2,7 +2,7 @@ const users = {
 	state: {
 		token: '',
         userInfo: '',
-        loginRole: '1' // 登陆角色--------1会员，2操作员 
+        loginRole: '' // 登陆角色--------1会员，2操作员 
 	},
 	mutations: {
 		setToken(state, self){

@@ -43,6 +43,21 @@ export default {
 			navIndex: 0
         }
     },
+	computed:{
+		pathId(){
+			return this.$route.params.id
+		}
+	},
+	watch:{
+		pathId(newData){
+			// 监听路由动态参数变化
+			console.log(newData)
+		}
+	},
+	mounted() {
+		// 获取路由动态参数
+		console.log(this.pathId)
+	},
     methods:{
         paginaClick(val){
 

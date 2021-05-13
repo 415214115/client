@@ -25,7 +25,8 @@
 					</div>
 					<div class="btnS nth1">充  值</div>
 					<div class="btnS nth2">提  现</div>
-					<div class="btnS nth3" @click="toBill">收支账单</div>
+					<div class="btnS nth3" v-if="isShowBill" @click="toBill">收支账单</div>
+					<div class="btnS nth3" v-else @click="toBack">返回上一页</div>
 				</div>
 			</div>
 		</template>
@@ -36,14 +37,25 @@
 export default{
     data(){
         return{
-
+			isShowBill: true
         }
     },
+	mounted() {
+		if(this.$route.path == '/index/bill'){
+			this.isShowBill = false
+		} else {
+			this.isShowBill = true
+		}
+		// console.log(this.$route.path)
+	},
     methods:{
         toBill(){
             // console.log()
-            this.$router.push('/home/bill')
-        }
+            this.$router.push('/index/bill')
+        },
+		toBack(){
+			this.$router.back()
+		}
     }
 }
 </script>

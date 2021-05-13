@@ -10,7 +10,7 @@ import slidBar from './module/slidBar.js'
 import breadcrumb from './module/breadcrumb.js'
 import menu from './module/menu.js'
 import users from './module/users.js'
-
+import handle from './module/handle.js'
 export default new Vuex.Store({
 	state: {
 		layOutSetTing: setTing
@@ -21,7 +21,8 @@ export default new Vuex.Store({
 		breadcrumb,
 		slidBar,
 		menu,
-        users
+        users,
+		handle
 	},
     getters:{
         getBreadcrumb: (state) => {
@@ -31,12 +32,12 @@ export default new Vuex.Store({
 	plugins: [createVuexAlong({
 		name: 'appSession',
 		local: {
-			list: ['breadcrumb', 'slidBar', 'menu', 'users'],
+			list: ['breadcrumb', 'slidBar', 'menu', 'users', 'handle'],
 			// 过滤模块 header 数据， 将其他的存入 localStorage
 			isFilter: true,
 		  },
 		session: {
-			list: ['breadcrumb', 'slidBar', 'users', 'menu']
+			list: ['breadcrumb', 'slidBar', 'users', 'menu', 'handle']
 		}
 	})]
 })

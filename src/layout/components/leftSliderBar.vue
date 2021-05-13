@@ -45,7 +45,7 @@
 							</div>
 						</div>
 					</el-submenu>
-					<el-menu-item :index="item.path" v-else v-show="!item.hidden" :class="$route.path==item.path?'el-menubefore':''" @click="menuItemClick(item)">
+					<el-menu-item :index="item.path" v-else v-show="!item.hidden" :class="$route.path.includes(item.path)?'el-menubefore':''" @click="menuItemClick(item)">
 						<img class="menuLftIcon" :src="item.meta.icon" v-if="item.meta.icon" style="width: 2rem;height: 2rem;" alt="">
 						<div v-else class="menuTag" :style="{background:item.meta.color}"></div>
 						<span slot="title">{{ item.meta.title }}</span>

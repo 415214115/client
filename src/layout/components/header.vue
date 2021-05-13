@@ -16,6 +16,10 @@
 					<img src="../../assets/image/home/user.png" alt="">
 					呱呱
 				</div>
+				<div class="rightInfosItem" @click="loginOut">
+					<img src="../../assets/image/home/out.png" style="margin-right: 0.5rem !important;" alt="">
+					<span>退出系统</span>
+				</div>
 			</div>
 			<!-- 欢迎，{{userInfo.nickName || userInfo.name || userInfo.phone}} -->
 			<!-- <span>个人中心</span> -->
@@ -82,13 +86,13 @@
 	.leftLogoImg{
 		height: 30px
 	} */
-	.headers span{
+	/* .headers span{
 		margin-left: 2rem;
 		cursor: pointer;
 	}
 	.headers span:hover{
 		color: #409EFF;
-	}
+	} */
 	
 	.unfold{
 		width: 38rem;
@@ -115,11 +119,14 @@
 		justify-content: space-between;
 		white-space: nowrap;
 		align-items: center;
-		margin-left: 2rem;
+		margin-left: 4rem;
 	}
-	.rightInfosItem:last-child{
+	.rightInfosItem span{
+		cursor: pointer;
+	}
+	/* .rightInfosItem:last-child{
 		font-size: 1.6rem;
-	}
+	} */
 	.rightInfos img{
 		height: 3.6rem;
 		margin-right: 1.5rem;

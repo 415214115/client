@@ -1,7 +1,8 @@
 const setTing = {
+	systemName: '卖家服务系统',
 	logo:{
 		isShow: true,
-		title: '后台管理系统',
+		title: '卖家服务系统',
 		image: require('./assets/logo.png')
 	}
 }

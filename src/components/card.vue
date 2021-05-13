@@ -23,7 +23,7 @@
 			}
 		},
 		mounted() {
-			console.log(this.bodyStyle)
+			// console.log(this.bodyStyle)
 		}
 	}
 </script>

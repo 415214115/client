@@ -26,7 +26,7 @@
 			}
 		},
 		mounted() {
-
+			this.$store.commit('setBreadcrumb', ['首页'])
 		},
 		watch: {},
 		methods: {

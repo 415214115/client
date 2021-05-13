@@ -8,10 +8,7 @@
                    <el-button type="warning" size="mini" class="issueBtn">发布需求</el-button>
                </div>
                <div class="handleBox">
-                   <div class="handleList selects">进行中</div>
-                   <div class="handleList">已反馈</div>
-                   <div class="handleList">已完结</div>
-                   <div class="handleList">有异议</div>
+				   <div class="handleList" v-for="(item, index) in navList" :key="index" :class="navIndex==index?'selects':''" @click="selectorNav(index)">{{ item }}</div>
                </div>
                <el-table :data="tableData" border style="width: 100%;margin-top: 2rem;">
                     <el-table-column prop="date" label="订单编号"></el-table-column>
@@ -39,7 +36,9 @@ export default {
     data(){
         return{
             inputVal: 200,
-            tableData: [{}]
+            tableData: [{}],
+			navList:['进行中','已反馈', '已完结', '有异议'],
+			navIndex: 0
         }
     },
     computed:{
@@ -48,12 +47,28 @@ export default {
             const parities = money / 4
             const data = parities + 6
             return data
-        }
+        },
+		pathId(){
+			return this.$route.params.id
+		}
     },
+	watch:{
+		pathId(newData){
+			// 监听路由动态参数变化
+			console.log(newData)
+		}
+	},
+	mounted() {
+		// 获取路由动态参数
+		console.log(this.pathId)
+	},
     methods:{
         paginaClick(val){
 
-        }
+        },
+		selectorNav(i){
+			this.navIndex = i
+		}
     }
 }
 </script>

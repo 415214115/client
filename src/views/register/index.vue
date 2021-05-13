@@ -2,22 +2,22 @@
 	<div class="login-container">
 		<div class="loginBox">
 			<div class="bgoverlay1">
-				<div class="systemName">卖家服务系统</div>
+				<div class="systemName">{{ $store.state.layOutSetTing.systemName }}</div>
 				<div class="bgoverlay2"></div>
 			</div>
 			<div class="loginForm">
-				<div class="vipLogins" v-show="isVipLogin">
+				<div class="vipLogins">
 					<!-- 会员登陆 -->
 					<div class="noVipTip">已是会员？<span @click="toLogin">【立即登录】</span></div>
 					<div class="loginFuncBox">
 						<div class="stepBox">
-							<div class="step step1 reach">1</div>
-							<div class="step step2">2</div>
-							<div class="step step3">3</div>
+							<div class="step step1" :class="stepI<=3?'reach':''">1</div>
+							<div class="step step2" :class="stepI>1?'reach':''">2</div>
+							<div class="step step3" :class="stepI==3?'reach':''">3</div>
 						</div>
-						<!-- <msgLogin></msgLogin> -->
-						<!-- <pwdLogin></pwdLogin> -->
-						<operatorLogin></operatorLogin>
+						<msgLogin v-show="stepI == 1"></msgLogin>
+						<pwdLogin v-show="stepI == 2"></pwdLogin>
+						<operatorLogin v-show="stepI == 3"></operatorLogin>
 					</div>
 				</div>
 			</div>
@@ -40,7 +40,8 @@
 		},
 		data() {
 			return {
-				isVipLogin: true
+				stepI: 1,
+				
 			}
 		},
 		created() {

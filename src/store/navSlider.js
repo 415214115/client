@@ -15,7 +15,7 @@ getRouter()
 /**
  * 遍历动态菜单生成导航
  */
-import menuList from '../router/getMenu.js'
+import menuList from '../utils/getMenu.js'
  let menus = menuList
 // console.log(leftMenu)
 

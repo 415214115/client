@@ -2,7 +2,7 @@
 	<div class="login-container">
 		<div class="loginBox">
 			<div class="bgoverlay1">
-				<div class="systemName">卖家服务系统</div>
+				<div class="systemName">{{ $store.state.layOutSetTing.systemName }}</div>
 				<div class="bgoverlay2"></div>
 			</div>
 			<div class="loginForm">
@@ -11,14 +11,14 @@
 					<div class="noVipTip">不是会员？<span @click="registerVip">【立即注册】</span></div>
 					<div class="loginFuncBox">
 						<div class="loginWay">
-							<div class="loginWayBtn selectWay">密码登录</div>
-							<div class="loginWayBtn">短信登录</div>
+							<div class="loginWayBtn" @click="loginType(1)" :class="loginTypes == 1?'selectWay':''">密码登录</div>
+							<div class="loginWayBtn" @click="loginType(2)" :class="loginTypes == 2?'selectWay':''">短信登录</div>
 						</div>
-						<pwdLogin></pwdLogin>
-						<!-- <msgLogin></msgLogin> -->
+						<pwdLogin v-if="loginTypes == 1"></pwdLogin>
+						<msgLogin v-if="loginTypes == 2"></msgLogin>
 						<div class="loginTip">
 							<span>忘记密码？</span>
-							<span>操作员登录入口</span>
+							<span @click="loginRole">操作员登录入口</span>
 						</div>
 					</div>
 				</div>
@@ -32,7 +32,7 @@
 						<operatorLogin></operatorLogin>
 						<div class="loginTip">
 							<span></span>
-							<span>会员登录入口</span>
+							<span @click="loginRole">会员登录入口</span>
 						</div>
 					</div>
 				</div>
@@ -56,18 +56,39 @@
 		},
 		data() {
 			return {
-				isVipLogin: true
+				isVipLogin: true,
+				loginTypes: 1
 			}
 		},
 		created() {
 			
 		},
 		mounted() {
-			
+			this.$store.commit('setLoginRole', '1')
+			this.$setMenu()
+		},
+		watch:{
+			isVipLogin(newData){
+				// 登陆角色--------1---true会员，2---false操作员 
+				if (newData) {
+					this.$store.commit('setLoginRole', '1')
+				} else{
+					this.$store.commit('setLoginRole', '2')
+				}
+				this.$setMenu()
+			}
 		},
 		methods: {
 			registerVip(){
 				this.$router.push('/register')
+			},
+			loginType(i){
+				// 选择登陆方式
+				this.loginTypes = i
+			},
+			loginRole(){
+				// 登陆角色选择
+				this.isVipLogin = !this.isVipLogin
 			}
 		}
 	}

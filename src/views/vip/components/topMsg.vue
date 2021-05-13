@@ -95,7 +95,7 @@
 	        },
 	    },
 		mounted() {
-			console.log(this.types)
+			// console.log(this.types)
 		},
 	    methods:{
 	        paginaClick(val){

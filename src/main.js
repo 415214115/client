@@ -10,7 +10,8 @@ import './nprogress' // permission control
 
 Vue.config.productionTip = false
 
-
+import leftMenus from './utils/getMenu'
+Vue.prototype.$setMenu = leftMenus
 // 全局请求or api
 import request from './utils/request'
 import api from './utils/api'

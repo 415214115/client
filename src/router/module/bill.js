@@ -1,5 +1,5 @@
 export const bill = {
-	path: "home/bill",
+	path: "index/bill",
 	name: "bill",
 	component: () => import("@/views/home/bill/index.vue"),
 	meta: {

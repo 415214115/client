@@ -1,6 +1,8 @@
 import router from './router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import store from './store'
+
 NProgress.configure({
 	easing: 'ease', // 动画方式    
 	speed: 300, // 递增进度条的速度    
@@ -13,10 +15,14 @@ router.beforeEach((to, from, next) => {
 	// 每次切换页面时，调用进度条
 	NProgress.start()
 	NProgress.inc() //这会以随机数量递增，且永远达不到100%，也可以设指定增量
-	if(to.path==='/login'){
+	const routerPath = {
+		'/login': '/login',
+		'/register': '/register'
+	}
+	if(routerPath[to.path]){
 	  return next()
 	}
-	if(window.sessionStorage.getItem('token')){
+	if(store.state.users.token){
 	  return  next()
 	}else{
 	  return next('/login')

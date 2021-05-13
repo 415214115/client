@@ -1,12 +1,12 @@
 <template>
 	<div class="loginBoxs">
-		<div class="inputItem">
+		<div class="inputItem" title="密码由8-16位大小写字母和数字、下划线组成">
 			<i class="el-icon-lock icon"></i>
-			<input class="inputs" type="password" placeholder="新密码" maxlength="11">
+			<input class="inputs" type="password" placeholder="新密码" v-model="pwd.password" maxlength="11">
 		</div>
-		<div class="inputItem" style="margin-top: 4rem;">
+		<div class="inputItem" style="margin-top: 4rem;" title="密码由8-16位大小写字母和数字、下划线组成">
 			<i class="el-icon-lock icon"></i>
-			<input class="inputs" type="password"  placeholder="再次输入">
+			<input class="inputs" type="password"  placeholder="再次输入" v-model="pwd.repetition">
 		</div>
 		<div class="accept">
 			<el-checkbox v-model="checked">
@@ -14,21 +14,54 @@
 			</el-checkbox>
 		</div>
 		<div class="btnBox">
-			<div class="login">返回上一步</div>
-			<div class="login">提交</div>
+			<el-button class="login" type="primary" @click="backStep" :loading="$store.state.handle.btnHandle">返回上一步</el-button>
+			<el-button class="login" type="primary" @click="submit" :loading="$store.state.handle.btnHandle">提交</el-button>
+			<!-- <div class="login" @click="backStep">返回上一步</div> -->
+			<!-- <div class="login" @click="submit">提交</div> -->
 		</div>
 	</div>
 </template>
 
 <script>
 	export default {
-		data(){
-			return{
-				
+		data() {
+			return {
+				checked: true,
+				pwd:{
+					password: '',
+					repetition: ''
+				}
 			}
 		},
-		methods:{
+		created() {
 			
+		},
+		mounted() {
+			
+		},
+		methods: {
+			submit(){
+				// 提交
+				const reg = /^[a-zA-Z0-9]{8,16}$/
+				if(!reg.test(this.pwd.password) || !reg.test(this.pwd.repetition)){
+					this.$alert('密码由8-16位大小写字母和数字、下划线组成，请正确输入')
+					return
+				}
+				if (this.pwd.password === this.pwd.repetition) {
+					if(this.checked){
+						this.$router.back()
+					} else {
+						this.$alert('请先阅读并同意某某协议')
+					}
+				} else{
+					this.$alert('两次密码输入不一致')
+				}
+				
+			},
+			backStep(){
+				// 返回上一步
+				this.$parent.stepI -= 1
+			}
 		}
 	}
 </script>
@@ -74,12 +107,12 @@
 			background: #34A1FF;
 			color: #FBF9FA;
 			font-size: 1.8rem;
-			height: 5rem;
-			line-height: 5rem;
+			// height: 5rem;
+			// line-height: 5rem;
 			text-align: center;
 			margin-top: 4rem;
 			margin-bottom: 2rem;
-			cursor: pointer;
+			// cursor: pointer;
 		}
 	}
 	

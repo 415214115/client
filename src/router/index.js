@@ -16,7 +16,7 @@ import {bill} from './module/bill.js' // 收支账单
 
 
 
-import './getMenu.js' // 
+// import './getMenu.js' // 
 
 // console.log(routerLists)
 export const routes = [{

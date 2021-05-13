@@ -2,13 +2,13 @@
 	<div class="loginBoxs">
 		<div class="inputItem">
 			<i class="el-icon-user icon"></i>
-			<input class="inputs" type="text" placeholder="用户名/手机号" maxlength="11">
+			<input class="inputs" type="text" placeholder="用户名/手机号" v-model="logins.userName" maxlength="11">
 		</div>
 		<div class="inputItem" style="margin-top: 4rem;">
 			<i class="el-icon-lock icon"></i>
-			<input class="inputs" type="password"  placeholder="登录密码">
+			<input class="inputs" type="password" v-model="logins.password" placeholder="登录密码">
 		</div>
-		<div class="login" @click="login">立 即 登 录</div>
+		<el-button class="login" type="primary" @click="login" :loading="$store.state.handle.btnHandle">立 即 登 录</el-button>
 	</div>
 </template>
 
@@ -16,13 +16,28 @@
 	export default {
 		data(){
 			return{
-				
+				logins:{
+					userName: '',
+					password: ''
+				}
 			}
+		},
+		mounted() {
+			
 		},
 		methods:{
 			login(){
-				sessionStorage.setItem('token','yes')
-				this.$router.replace('/index')
+				if (!this.logins.userName || !this.logins.password) {
+					this.$alert('用户名或密码不能为空')
+				} else{
+					this.$store.commit('setBtnHandle')
+					setTimeout(()=>{
+						this.$store.commit('setToken', '123')
+						this.$store.commit('setBtnHandle')
+						this.$router.replace('/index')
+					},3000)
+					
+				}
 			}
 		}
 	}
@@ -54,12 +69,12 @@
 			background: #34A1FF;
 			color: #FBF9FA;
 			font-size: 1.8rem;
-			height: 5rem;
-			line-height: 5rem;
+			// height: 5rem;
+			// line-height: 5rem;
 			text-align: center;
 			margin-top: 4rem;
 			margin-bottom: 2rem;
-			cursor: pointer;
+			// cursor: pointer;
 		}
 	}
 	
