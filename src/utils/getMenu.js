@@ -42,6 +42,7 @@ const siteList = [
 export default function leftMenus(){
 	let routerLists = []
 	
+	// console.log(operatorSite)
 	routerLists.push(home)
 	siteList.forEach(v => {
 	    // 登陆角色--------1会员，2操作员 
@@ -54,12 +55,14 @@ export default function leftMenus(){
 		item.meta.title = v.title
 		item.meta.color = v.color
 		item.meta.id = v.id
-		item.children.forEach(c=>{
+		item.children.forEach((c, i)=>{
 			c.path = `${c.path.split(':')[0]}${v.id}`
 			c.meta.id = v.id
+			
 		})
 		routerLists.push(item)
 	})
+	console.log(routerLists)
 	routerLists.push(invite)
 	routerLists.push(userCenter)
 	store.commit('setLeftMenu', routerLists)

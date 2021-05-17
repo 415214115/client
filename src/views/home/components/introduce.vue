@@ -57,7 +57,7 @@
 			margin-right: 3rem;
 		}
 		.rightIntroduce{
-			width: 93rem;
+			width:85%;
 			// align-items: center;
 			// flex-direction: column;
 			// text-align: left;

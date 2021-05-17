@@ -31,14 +31,14 @@
 										<div v-else class="menuTag" :style="{background:list.meta.color}"></div>
 										<span slot="title">{{ list.meta.title }}</span>
 									</template>
-									<el-menu-item v-for="listItem in list.children" :key="listItem.name" v-show="!listItem.hidden" :index="`${listItem.path}`" :class="$route.path==listItem.path?'el-menubefore':''">
+									<el-menu-item v-for="listItem in list.children" :key="listItem.name" v-show="!listItem.hidden" :index="`${listItem.path}`" :class="$route.path.includes(listItem.path.split('/')[2])&&$route.params.id==listItem.meta.id?'el-menubefore':''">
 										<img class="menuLftIcon" :src="listItem.meta.icon" v-if="listItem.meta.icon" style="width: 2rem;height: 2rem;" alt="">
 										<div v-else class="menuTag" :style="{background:listItem.meta.color}"></div><span slot="title">{{ listItem.meta.title }}</span>
 									</el-menu-item>
 								</el-submenu>
 							</div>
 							<div v-else>
-								<el-menu-item :index="`${list.path}`" v-show="!list.hidden" :class="$route.path==list.path?'el-menubefore':''" @click="submenuItemClick(list)">
+								<el-menu-item :index="`${list.path}`" v-show="!list.hidden" :class="$route.path.includes(list.path.split('/')[2])&&$route.params.id==list.meta.id?'el-menubefore':''" @click="submenuItemClick(list)">
 									<img class="menuLftIcon" :src="list.meta.icon" v-if="list.meta.icon" style="width: 2rem;height: 2rem;" alt="">
 									<div v-else class="menuTag" :style="{background:list.meta.color}"></div><span slot="title">{{ list.meta.title }}</span>
 								</el-menu-item>
