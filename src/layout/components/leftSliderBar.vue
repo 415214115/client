@@ -104,6 +104,7 @@
 } */
 	.slideBar {
 		height: 100%;
+		background: #FFFFFF;
 	}
 
 	.el-menu {

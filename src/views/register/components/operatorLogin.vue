@@ -9,7 +9,7 @@
 			<input class="inputs" type="password"  placeholder="再次输入" v-model="pwd.repetition">
 		</div>
 		<div class="accept">
-			<el-checkbox v-model="checked"></el-checkbox><span>点击“阅读并接受”<span class="agreement" @click="agreement">《用户协议》</span>协议</span>
+			<el-checkbox v-model="checked"></el-checkbox><span>点击<span class="agreement" @click="agreement">“阅读并接受”</span>《用户协议》</span>
 		</div>
 		<div class="btnBox">
 			<el-button class="login" type="primary" @click="backStep" :loading="$store.state.handle.btnHandle">返回上一步</el-button>
@@ -97,9 +97,11 @@
 			span{
 				font-size: 1.2rem;
 				color: #999999;
+				margin-left: 1rem;
 				.agreement{
 					color: #E78B6F;
 					cursor: pointer;
+					margin-left: 0rem;
 				}
 			}
 			

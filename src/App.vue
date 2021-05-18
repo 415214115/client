@@ -26,7 +26,7 @@ export default {
 		width: 100%;
 		height: 100vh;
 		font-size: 1.4rem;
-		/* background: #E7E8EC; */
+		background: #F0F0F0;
 		min-width: 1366px;
 		overflow-y: hidden;
 	}
