@@ -3,11 +3,14 @@
 		<card>
 			<template slot="content">
 				<div class="userHead">
-					<el-image class="userImages" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" fit="cover"></el-image>
+					<el-image class="userImages"
+						src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" fit="cover">
+					</el-image>
 					<div class="userName">呱呱</div>
 				</div>
 				<div class="functionModule">
-					<div class="moduleList" v-for="item in functionModule" :key="item.id" :style="{background: item.bgColor}">
+					<div class="moduleList" v-for="item in functionModule" :key="item.id"
+						:style="{background: item.bgColor}" @click="updateMsg(item.id)">
 						<div class="moduleBox">
 							<el-image class="moduleIcon" :src="item.icon" fit="cover"></el-image>
 							<div class="moduleMsg">
@@ -28,19 +31,21 @@
 				</div>
 			</template>
 		</card>
+		<phoneCode phone="17772447679" :type="updateType" v-if="phoneCode" ></phoneCode>
+
 	</div>
-	
+
 </template>
 
 <script>
+	import phoneCode from './components/phoneCode.vue'
 	export default {
-		components:{
-			
+		components: {
+			phoneCode
 		},
 		data() {
 			return {
-				functionModule:[
-					{
+				functionModule: [{
 						id: 1,
 						title: '手机绑定',
 						icon: require('@/assets/image/userCenter/sj.png'),
@@ -94,39 +99,53 @@
 						btnIcon: 'el-icon-arrow-right',
 						bgColor: '#BD5A5A'
 					}
-				]
+				],
+				phoneCode: false,
+				updateType: ''
 			}
 		},
 		mounted() {
-			
+
 		},
 		watch: {},
 		methods: {
-			
+			updateMsg(id){
+				/**
+				 * @param {id}  1.修改手机2修改微信3.修改登陆密码4.修改支付宝5.修改支付密码6.修改收款银行卡
+				 */
+				this.updateType = id
+				if(this.updateType){
+					this.phoneCode = true
+				}
+			}
 		}
 	}
 </script>
 
 <style scoped="scoped" lang="scss">
-	.pageHome{
+	.pageHome {
 		width: 100%;
-		text-align: center;
-		.userHead{
+		// text-align: center;
+
+		.userHead {
 			text-align: center;
-			.userImages{
+
+			.userImages {
 				border-radius: 100%;
 				width: 11rem;
 				height: 11rem;
 				margin-bottom: 2rem;
 			}
-			.userName{
+
+			.userName {
 				color: #00448B;
 				font-size: 2.8rem;
 				font-weight: normal;
 			}
 		}
-		.functionModule{
-			.moduleList{
+
+		.functionModule {
+			.moduleList {
 				width: 34rem;
 				height: 14rem;
 				border-radius: 10px;
@@ -137,34 +156,42 @@
 				margin-right: 6rem;
 				margin-top: 9rem;
 				padding: 4rem 2rem;
-				.moduleBox{
+
+				.moduleBox {
 					display: flex;
 					justify-content: space-between;
 					white-space: nowrap;
 					align-items: center;
 					text-align: left;
-					.moduleIcon{
+
+					.moduleIcon {
 						width: 5rem;
 						height: 5rem;
 						margin-right: 2rem;
 					}
-					.moduleMsg{
+
+					.moduleMsg {
 						width: 14rem;
-						.moduleTitle,.moduleVal{
+
+						.moduleTitle,
+						.moduleVal {
 							font-weight: normal;
 							font-size: 2.4rem;
 						}
 					}
-					.moduleBtn{
+
+					.moduleBtn {
 						cursor: pointer;
-						span{
+
+						span {
 							margin-right: 1rem;
 						}
 					}
 				}
 			}
 		}
-		.footerText{
+
+		.footerText {
 			color: #EC6161;
 			margin-top: 6rem;
 			font-size: 1.8rem;
@@ -173,6 +200,4 @@
 			padding-left: 9rem;
 		}
 	}
-	
-	
 </style>

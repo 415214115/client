@@ -51,9 +51,9 @@
 			},
 			getCode(){
 				// 获取验证码
-				const reg = /^1[3-9]\d{9}$/
+				const reg = $globalData.phoneReg
 				if (this.logins.phone && reg.test(this.logins.phone)) {
-					let time = 15
+					let time = $globalData.getCodeTime
 					const timer = setInterval(()=>{
 						if (time == 0) {
 							this.isDisabled = false

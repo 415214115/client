@@ -40,7 +40,7 @@
 		},
 		data() {
 			return {
-				stepI: 1,
+				stepI: 3,
 				
 			}
 		},

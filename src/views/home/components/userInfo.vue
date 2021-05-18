@@ -23,8 +23,8 @@
 							99999.99
 						</div>
 					</div>
-					<div class="btnS nth1">充  值</div>
-					<div class="btnS nth2">提  现</div>
+					<div class="btnS nth1" @click="recharge">充值</div>
+					<div class="btnS nth2" @click="withdraw">提现</div>
 					<div class="btnS nth3" v-if="isShowBill" @click="toBill">收支账单</div>
 					<div class="btnS nth3" v-else @click="toBack">返回上一页</div>
 				</div>
@@ -55,6 +55,12 @@ export default{
         },
 		toBack(){
 			this.$router.back()
+		},
+		recharge(){
+			// 充值
+		},
+		withdraw(){
+			// 提现
 		}
     }
 }

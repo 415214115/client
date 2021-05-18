@@ -17,7 +17,8 @@ router.beforeEach((to, from, next) => {
 	NProgress.inc() //这会以随机数量递增，且永远达不到100%，也可以设指定增量
 	const routerPath = {
 		'/login': '/login',
-		'/register': '/register'
+		'/register': '/register',
+		'/agreement': '/agreement'
 	}
 	if(routerPath[to.path]){
 	  return next()

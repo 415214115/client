@@ -7,12 +7,24 @@ Vue.use(VueRouter)
 import store from '../store/index.js'
 // import module
 // import {banner} from './module/banner.js' // 首页
-import {home} from './module/home.js' // 首页
-import {userCenter} from './module/userCenter.js' // 个人中心
-import {invite} from './module/invite.js' // 邀请返现
-import {vipSite} from './module/vipSite.js' // 站点 会员
-import {operatorSite} from './module/operatorSite.js' // 站点操作员
-import {bill} from './module/bill.js' // 收支账单
+import {
+	home
+} from './module/home.js' // 首页
+import {
+	userCenter
+} from './module/userCenter.js' // 个人中心
+import {
+	invite
+} from './module/invite.js' // 邀请返现
+import {
+	vipSite
+} from './module/vipSite.js' // 站点 会员
+import {
+	operatorSite
+} from './module/operatorSite.js' // 站点操作员
+import {
+	bill
+} from './module/bill.js' // 收支账单
 
 
 
@@ -29,14 +41,23 @@ export const routes = [{
 		component: () => import('@/views/login/index.vue')
 	},
 	{
-			path: '/register',
-			name: 'register',
-			meta: {
-				title: '注册',
-				icon: ''
-			},
-			component: () => import('@/views/register/index.vue')
+		path: '/register',
+		name: 'register',
+		meta: {
+			title: '注册',
+			icon: ''
 		},
+		component: () => import('@/views/register/index.vue')
+	},
+	{
+		path: '/agreement',
+		name: 'agreement',
+		meta: {
+			title: '用户协议',
+			icon: ''
+		},
+		component: () => import('@/views/agreement/index.vue')
+	},
 	{
 		path: '/',
 		name: 'layout',
@@ -44,9 +65,9 @@ export const routes = [{
 		redirect: '/index',
 		children: [
 			home,
-            bill,
+			bill,
 			vipSite,
-            operatorSite,
+			operatorSite,
 			invite,
 			userCenter
 		]

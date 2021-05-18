@@ -9,9 +9,7 @@
 			<input class="inputs" type="password"  placeholder="再次输入" v-model="pwd.repetition">
 		</div>
 		<div class="accept">
-			<el-checkbox v-model="checked">
-				<span>点击“阅读并接受”《某某》协议</span>
-			</el-checkbox>
+			<el-checkbox v-model="checked"></el-checkbox><span>点击“阅读并接受”<span class="agreement" @click="agreement">《用户协议》</span>协议</span>
 		</div>
 		<div class="btnBox">
 			<el-button class="login" type="primary" @click="backStep" :loading="$store.state.handle.btnHandle">返回上一步</el-button>
@@ -42,9 +40,9 @@
 		methods: {
 			submit(){
 				// 提交
-				const reg = /^[a-zA-Z0-9]{8,16}$/
+				const reg = $globalData.passwordReg
 				if(!reg.test(this.pwd.password) || !reg.test(this.pwd.repetition)){
-					this.$alert('密码由8-16位大小写字母和数字、下划线组成，请正确输入')
+					this.$alert('密码由6-10位大小写字母和数字组成，请正确输入')
 					return
 				}
 				if (this.pwd.password === this.pwd.repetition) {
@@ -61,6 +59,9 @@
 			backStep(){
 				// 返回上一步
 				this.$parent.stepI -= 1
+			},
+			agreement(){
+				this.$router.push('/agreement')
 			}
 		}
 	}
@@ -96,7 +97,12 @@
 			span{
 				font-size: 1.2rem;
 				color: #999999;
+				.agreement{
+					color: #E78B6F;
+					cursor: pointer;
+				}
 			}
+			
 		}
 		.btnBox{
 			display: flex;
