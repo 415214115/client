@@ -6,7 +6,7 @@
            <el-card>
                <div slot="header">
                    <span class="issueTitle">发布中心</span>
-                   <el-button type="warning" size="mini" class="issueBtn">发布需求</el-button>
+                   <el-button type="warning" size="mini" class="issueBtn" @click="demand">发布需求</el-button>
                </div>
                <div class="handleBox">
 				   <div class="handleList" v-for="(item, index) in navList" :key="index" :class="navIndex==index?'selects':''" @click="selectorNav(index)">{{ item }}</div>
@@ -26,6 +26,52 @@
 		        <paginaTion :totalNum="0" @paginaClick="paginaClick"></paginaTion>
            </el-card>
        </div>
+	   <el-dialog title="发布需求" :visible.sync="dialogVisible" :width="$globalData.dialogWidth" >
+			<div>
+				<el-form label-position="right" :model="formInline" class="demo-form-inline" label-width="110px" size="mini">
+				  <el-form-item label="需求类型">
+						<el-radio-group v-model="formInline.radio1">
+					      <el-radio-button label="待退款"></el-radio-button>
+					      <el-radio-button label="广告充值" disabled ></el-radio-button>
+					      <el-radio-button label="本土回款" disabled ></el-radio-button>
+					    </el-radio-group>
+				  </el-form-item>
+				  <el-form-item label="银行名称">
+				  		<el-input class="inputs"  v-model="formInline.code" placeholder="银行名称"></el-input><span class="inputTip">台湾地区可输入代码</span>
+				  </el-form-item>
+				  <el-form-item label="收款人姓名">
+				  		<el-input class="inputs"  v-model="formInline.code" placeholder="收款人姓名"></el-input><span class="inputTip">台湾地区可输入代码</span>
+				  </el-form-item>
+				  <el-form-item label="收款账号">
+				  		<el-input class="inputs"  v-model="formInline.code" placeholder="收款账号"></el-input>
+				  </el-form-item>
+				  <el-form-item label="备注">
+				  		<el-input class="inputs" type="textarea" autosize v-model="formInline.code" placeholder="备注"></el-input>
+				  </el-form-item>
+				  <el-form-item label="退款金额">
+				  		<el-input class="inputs" v-model="formInline.code" placeholder="退款金额"></el-input><span class="inputTip">请输入当地货币数量！</span>
+				  </el-form-item>
+				  <el-form-item label="支付方式">
+				  		<el-radio-group v-model="formInline.radio">
+				  		    <el-radio :label="3">支付宝</el-radio>
+				  		    <el-radio :label="6">余额</el-radio>
+				  		  </el-radio-group>
+				  </el-form-item>
+				  <el-form-item label="需支付">
+				  		<span class="aerobe">5523.00元</span>
+				  </el-form-item>
+				  <el-form-item label="">
+				  		<div><span class="inputTip">订单计算规则：退款金额*（1-手续费％）÷汇率-流水笔数*对账手续费</span></div>
+						<div><span class="inputTip">手续费：3          汇率：4        手续费：5</span></div>
+				  </el-form-item>
+				</el-form>
+			</div>
+			<span slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="cancel">取 消</el-button>
+				<el-button size="mini" type="primary" @click="nextStep" :loading="$store.state.handle.btnHandle">支付</el-button>
+				<div style="margin-top: 1rem;">仅支持 支付宝 或者 余额支付 </div>
+			</span>
+	   </el-dialog>
    </div>
 </template>
 <script>
@@ -39,7 +85,11 @@ export default {
             inputVal: 200,
             tableData: [{}],
 			navList:['进行中','已反馈', '已完结', '有异议'],
-			navIndex: 0
+			navIndex: 0,
+			dialogVisible: false,
+			formInline: {
+				
+			}
         }
     },
     computed:{
@@ -69,6 +119,9 @@ export default {
         },
 		selectorNav(i){
 			this.navIndex = i
+		},
+		demand(){
+			this.dialogVisible = true
 		}
     }
 }
@@ -114,4 +167,17 @@ export default {
             }
         }
     }
+	.inputTip{
+		font-size: 1.2rem;
+		margin-left: 1rem;
+		color: #F9961E;
+	}
+	.inputs{
+		width: 70%;
+	}
+	.aerobe{
+		font-size: 1.8rem;
+		color: #F44242;
+		font-weight: bold;
+	}
 </style>

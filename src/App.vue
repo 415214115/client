@@ -57,4 +57,5 @@ export default {
 	.el-form-item .el-input{
 		width: 21.5rem;
 	}
+	
 </style>

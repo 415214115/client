@@ -5,7 +5,7 @@
            <el-card>
                <div slot="header">
                    <span class="issueTitle">发布中心</span>
-                   <el-button type="warning" size="mini" class="issueBtn">发布需求</el-button>
+                   <el-button type="warning" size="mini" class="issueBtn" @click="demand">发布需求</el-button>
                </div>
                <div class="handleBox">
 				   <div class="handleList" v-for="(item, index) in navList" :key="index" :class="navIndex==index?'selects':''" @click="selectorNav(index)">{{ item }}</div>
@@ -17,6 +17,43 @@
 			  <endTabel v-if="navIndex == 4"></endTabel>
            </el-card>
        </div>
+	   <el-dialog title="发布需求" :visible.sync="dialogVisible" :width="$globalData.dialogWidth" >
+	   			<div>
+	   				<el-form label-position="right" :model="formInline" class="demo-form-inline" label-width="110px" size="mini">
+	   				  <el-form-item label="需求类型">
+	   						<el-radio-group v-model="formInline.radio1">
+	   					      <el-radio-button label="待退款" disabled></el-radio-button>
+	   					      <el-radio-button label="广告充值" disabled ></el-radio-button>
+	   					      <el-radio-button label="本土回款"  ></el-radio-button>
+	   					    </el-radio-group>
+	   				  </el-form-item>
+	   				  <el-form-item label="店铺数量">
+	   				  		<el-input class="inputs"  v-model="formInline.code" placeholder="店铺数量"></el-input>
+	   				  </el-form-item>
+	   				  <el-form-item label="回款金额">
+	   				  		<el-input class="inputs"  v-model="formInline.code" placeholder="大致回款金额总计（当地货币）"></el-input><span class="inputTip">台湾地区填写具体金额</span>
+	   				  </el-form-item>
+	   				  <el-form-item label="预计到账">
+	   				  		<el-input class="inputs"  v-model="formInline.code" placeholder="预计到账（人民币）"></el-input>
+							<div>
+								<span class="inputTips">换算规则：（回款金额×（1-百分比手续费）÷汇率+店铺数量*对账手续费/店）</span>
+							</div>
+	   				  </el-form-item>
+	   				  <el-form-item label="备注">
+	   				  		<el-input class="inputs" type="textarea" autosize v-model="formInline.code" placeholder="备注"></el-input>
+	   				  </el-form-item>
+					  <el-form-item label="">
+					  		<div>
+					  			<span class="inputTips">注：发布成功后请等待操作手接单并反馈收款信息</span>
+					  		</div>
+					  </el-form-item>
+	   				</el-form>
+	   			</div>
+	   			<span slot="footer" class="dialog-footer">
+	   				<el-button size="mini" @click="dialogVisible = false">取 消</el-button>
+	   				<el-button size="mini" type="primary" @click="nextStep" :loading="$store.state.handle.btnHandle">确认发布</el-button>
+	   			</span>
+	   </el-dialog>
    </div>
 </template>
 <script>
@@ -40,7 +77,11 @@ export default {
             inputVal: 200,
             tableData: [{}],
 			navList:['回款订单','进行中', '待结算', '争议中', '已完结'],
-			navIndex: 0
+			navIndex: 0,
+			dialogVisible: false,
+			formInline: {
+				
+			}
         }
     },
 	computed:{
@@ -64,6 +105,9 @@ export default {
         },
 		selectorNav(i){
 			this.navIndex = i
+		},
+		demand(){
+			this.dialogVisible = true
 		}
     }
 }
@@ -71,119 +115,6 @@ export default {
 <style lang="scss" scoped>
     .unluckily{
         width: 100%;
-  //       .topMsgBox{
-  //           width: 100%;
-  //           display: flex;
-  //           justify-content: space-between;
-  //           white-space: nowrap;
-  //           .msgBoxList{
-  //               width: 72rem;
-  //               height: 27rem;
-  //               border-radius: 3px;
-  //               box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-  //               position: relative;
-  //               padding: 2rem 3rem;
-  //               background: #FFFFFF;
-  //           }
-  //           .tLeftMsg{
-  //               &::after{
-  //                   content: '';
-  //                   position: absolute;
-  //                   width: 100%;
-  //                   height: 100%;
-  //                   top: 0;
-  //                   bottom: 0;
-  //                   background-image: url(../../../assets/image/login/bg2.png);
-  //                   background-position: 41rem 7rem;
-  //                   background-repeat: no-repeat;
-  //                   background-size: 25rem 18rem;
-  //                   opacity: 0.5;
-  //                   z-index: 2;
-  //               }
-  //           }
-  //           .tRightMsg{
-  //               background: #7CD0FF;
-  //               .declaration{
-  //                   background: #FFFFFF;
-  //                   color: #383535;
-  //                   padding: 1rem;
-  //                   border-radius: 3px;
-  //                   font-size: 1.6rem;
-  //                   display: inline-block;
-  //               }
-  //               .inputMoney{
-  //                   margin-top: 2rem;
-
-  //                   .ltitleas{
-  //                       color: #F6F7F8;
-  //                       font-size: 1.8rem;
-  //                       span{
-  //                           color: #333333;
-  //                       }
-  //                   }
-  //                   input{
-  //                       border: none;
-  //                       outline: none;
-  //                       margin-left: 2rem;
-  //                       border-radius: 3px;
-  //                       padding: 0 10px;
-  //                       height: 3rem;
-  //                   }
-  //               }
-  //               .explain{
-  //                   color: #333333;
-  //                   font-size: 1.6rem;
-  //                   margin-top: 2rem;
-  //               }
-  //           }
-  //           .lmsgContent{
-  //               width: 100%;
-  //               height: 100%;
-  //               position: absolute;
-  //               left: 0;
-  //               right: 0;
-  //               top: 0;
-  //               bottom: 0;
-  //               margin: auto;
-  //               padding: 2rem 3rem;
-  //               z-index: 3;
-  //               .declaration{
-  //                   padding: 1rem;
-  //                   border-radius: 3px;
-  //                   background: rgba(30,135,240,0.6);
-  //                   color: #FEFEFE;
-  //                   font-size: 1.6rem;
-  //                   display: inline-block;
-  //               }
-  //               .rightIntroduce{
-		// 	width: 45rem;
-  //           margin-top: 2rem;
-  //           margin-bottom: 3rem;
-		// 	.rightTitle{
-		// 		width: 100%;
-		// 		margin-bottom: 1.6rem;
-		// 		font-size: 1.8rem;
-		// 		height: 5rem;
-		// 		word-break: break-all;
-		// 		      display: -webkit-box;
-		// 		      -webkit-box-orient: vertical;
-		// 		      -webkit-line-clamp: 2;
-		// 		      overflow: hidden;
-		// 		      white-space: pre-wrap;
-		// 		      text-overflow: ellipsis;
-		// 			  line-height: 2.5rem;
-		// 			  text-align: justify;
-		// 	}
-		// 	.rightTitleTime{
-		// 		color: #6B6767;
-		// 		font-size: 1.8rem;
-		// 		word-spacing: 2rem;
-		// 		width: 100%;
-		// 		text-align: left;
-		// 	}
-		// }
-  //           }
-  //       }
         .cardTabel{
             width: 100%;
             margin-top: 2rem;
@@ -222,4 +153,21 @@ export default {
             }
         }
     }
+	.inputTip{
+		font-size: 1.2rem;
+		margin-left: 1rem;
+		color: #F9961E;
+	}
+	.inputs{
+		width: 70%;
+	}
+	.aerobe{
+		font-size: 1.8rem;
+		color: #F44242;
+		font-weight: bold;
+	}
+	.inputTips{
+		font-size: 1.2rem;
+		color: #F44242;
+	}
 </style>

@@ -38,7 +38,7 @@ export const vipSite = {
 			component: () => import("@/views/vip/returnedmoney/index.vue"),
 			hidden: false,
 			meta: {
-				title: '本店回款',
+				title: '本土回款',
 				icon: '',
 				color: ''
 			}
