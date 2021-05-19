@@ -8,12 +8,14 @@
 			<div class="inputItem">
 				<!-- <i class="el-icon-lock icon"></i> -->
 				<img src="../../../assets/image/login/code.png" class="icon iconImg" alt="">
-				<input class="inputs" type="text"  v-model="logins.code" placeholder="验证码">
+				<input class="inputs" type="text" v-model="logins.code" placeholder="验证码">
 			</div>
-			<el-button type="primary" size="mini" class="getCode" :disabled="isDisabled" @click="getCode">{{ codeText }}</el-button>
+			<el-button type="primary" size="mini" class="getCode" :disabled="isDisabled" @click="getCode">{{ codeText }}
+			</el-button>
 		</div>
-		
-		<el-button class="login" type="primary" @click="nextStep" :loading="$store.state.handle.btnHandle">下一步</el-button>
+
+		<el-button class="login" type="primary" @click="nextStep" :loading="$store.state.handle.btnHandle">下一步
+		</el-button>
 	</div>
 </template>
 
@@ -27,45 +29,64 @@
 				},
 				codeText: '获   取',
 				isDisabled: false
-				
+
 			}
 		},
 		created() {
-			
+
 		},
 		mounted() {
-			
+
 		},
 		methods: {
-			nextStep(){
+			nextStep() {
 				// 下一步
 				if (!this.logins.phone || !this.logins.code) {
 					this.$alert('手机号或验证码不能为空')
-				} else{
+				} else {
 					this.$store.commit('setBtnHandle')
-					setTimeout(()=>{
+
+					this.$request.postJson('/common/checkCode', {
+						phone: this.logins.phone,
+						code: this.logins.code
+					}).then(res => {
+						if (res.code == 200) {
+							this.$store.commit('setBtnHandle')
+							this.$parent.stepI += 1
+							this.logins.code = ''
+						}
+					}).catch(e => {
 						this.$store.commit('setBtnHandle')
-						this.$parent.stepI += 1
-					},1000)
+						this.$alert('验证码错误')
+					})
 				}
 			},
-			getCode(){
+			getCode() {
 				// 获取验证码
 				const reg = $globalData.phoneReg
 				if (this.logins.phone && reg.test(this.logins.phone)) {
 					let time = $globalData.getCodeTime
-					const timer = setInterval(()=>{
+					const timer = setInterval(() => {
 						if (time == 0) {
 							this.isDisabled = false
 							this.codeText = '重新获取'
 							clearInterval(timer)
-						} else{
+						} else {
 							time -= 1
 							this.codeText = `${time} S`
 							this.isDisabled = true
 						}
 					}, 1000)
-				} else{
+					this.$request.get('/common/sendMessageForGetCode', {
+						phone: this.logins.phone
+					}).then(res => {
+						if (res.code == 200) {
+							console.log(res.data)
+						}
+					}).catch(e => {
+						this.$message.error(e.msg)
+					})
+				} else {
 					this.$alert('请输入正确的手机号码')
 				}
 			}
@@ -74,31 +95,36 @@
 </script>
 
 <style scoped="scoped" lang="scss">
-	.loginBoxs{
+	.loginBoxs {
 		margin-top: 5rem;
-		.inputItem{
+
+		.inputItem {
 			width: 100%;
 			padding: 2rem 0;
 			border-bottom: 1px solid #BFBFBF;
 			display: flex;
 			justify-content: flex-start;
 			align-items: center;
-			.icon{
+
+			.icon {
 				font-size: 2.6rem;
 				margin-right: 2rem;
 				color: #999999;
 			}
-			.iconImg{
+
+			.iconImg {
 				width: 2.6rem;
 			}
-			.inputs{
+
+			.inputs {
 				border: none;
 				outline: none;
 				width: 29rem;
 			}
-			
+
 		}
-		.login{
+
+		.login {
 			width: 100%;
 			background: #34A1FF;
 			color: #FBF9FA;
@@ -108,16 +134,19 @@
 			margin-bottom: 2rem;
 		}
 	}
-	.getCodeBox{
+
+	.getCodeBox {
 		width: 100%;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		.inputItem{
-			
+
+		.inputItem {
+
 			width: 21rem;
 		}
-		.getCode{
+
+		.getCode {
 			width: 12rem;
 			text-align: center;
 			background: #82C5FE;

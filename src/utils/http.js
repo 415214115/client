@@ -11,11 +11,8 @@ import {
 const baseURL = 'http://chenzhouhuang.test.utools.club'
 // create an axios instance
 export const http = axios.create({
-	// https://kwkxcx.com
-	baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-	// baseURL: 'https://chenzhouhuang.utools.club', // url = base url + request url 
-	// baseURL: 'https://kwkxcx.com', // url = base url + request url
-	// baseURL: baseURL,
+	// baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+	baseURL: baseURL,
 	// withCredentials: true,
 	headers: {
 		'X-Requested-With': 'XMLHttpRequest',
@@ -32,14 +29,14 @@ http.interceptors.request.use(config => {
 		config.headers['token'] = token
 	}
 	// console.log(config)
-	if (config.postType === 1 && config.method == 'post') {
-	  config.data = qs.stringify(config.data)
-	 }
+	// if (config.postType === 1 && config.method == 'post') {
+	//   config.data = qs.stringify(config.data)
+	//  }
 	// config.data = qs.stringify(config.data)
 	return config
 }, error => {
 	// do something with request error
-	console.log(error) // for debug
+	// console.log(error) // for debug
 	return Promise.reject(error)
 })
 
@@ -49,7 +46,7 @@ http.interceptors.request.use(config => {
 http.interceptors.response.use(response => {
 	const res = response.data
 	// console.log(response)
-	if(res.code && res.code != 'succes'){
+	if(res.code && res.code != '200'){
 		Message.error(res.msg)
 		return Promise.reject(res)
 		// errorHandle(res.code, res.message)
@@ -65,7 +62,7 @@ http.interceptors.response.use(response => {
 		Message.error('网络错误!')
 		return
 	}
-	console.log('错误')
+	// console.log('错误')
 	// console.log(error) // for debug
 	console.log(error.response.data) // for debug
 	errorHandle(error.response.data.status, error.response.data.message)

@@ -48,7 +48,7 @@
 			getCode(){
 				// 获取验证码
 				const reg = $globalData.phoneReg
-				if (this.phone && reg.test(this.phone)) {
+				if (this.logins.phone && reg.test(this.logins.phone)) {
 					let time = $globalData.getCodeTime
 					const timer = setInterval(()=>{
 						if (time == 0) {
@@ -61,6 +61,15 @@
 							this.isDisabled = true
 						}
 					}, 1000)
+					this.$request.get('/common/sendMessageForGetCode', {
+						phone: this.logins.phone
+					}).then(res => {
+						if (res.code == 200) {
+							console.log(res)
+						}
+					}).catch(e => {
+						this.$message.error(e.msg)
+					})
 				} else{
 					this.$alert('请输入正确的手机号码')
 				}

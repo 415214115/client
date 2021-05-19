@@ -7,11 +7,13 @@
 		<div class="inputItem" style="margin-top: 4rem;">
 			<!-- <i class="el-icon-lock icon"></i> -->
 			<img src="../../../assets/image/userCenter/wx1.png" class="icon iconImg" alt="">
-			<input class="inputs" type="password"  placeholder="联系微信" v-model="user.WeChat">
+			<input class="inputs" type="text" placeholder="联系微信" v-model="user.WeChat">
 		</div>
 		<div class="btnBox">
-			<el-button class="login" type="primary" @click="backStep" :loading="$store.state.handle.btnHandle">返回上一步</el-button>
-			<el-button class="login" type="primary" @click="nextStep" :loading="$store.state.handle.btnHandle">下一步</el-button>
+			<el-button class="login" type="primary" @click="backStep" :loading="$store.state.handle.btnHandle">返回上一步
+			</el-button>
+			<el-button class="login" type="primary" @click="nextStep" :loading="$store.state.handle.btnHandle">下一步
+			</el-button>
 		</div>
 	</div>
 </template>
@@ -24,29 +26,29 @@
 					userName: '',
 					WeChat: ''
 				}
-				
+
 			}
 		},
 		created() {
-			
+
 		},
 		mounted() {
-			
+
 		},
 		methods: {
-			nextStep(){
+			nextStep() {
 				// 下一步
 				if (!this.user.userName || !this.user.WeChat) {
 					this.$alert('用户名或微信不能为空')
-				} else{
+				} else {
 					this.$store.commit('setBtnHandle')
-					setTimeout(()=>{
+					setTimeout(() => {
 						this.$store.commit('setBtnHandle')
 						this.$parent.stepI += 1
-					},1000)
+					}, 1000)
 				}
 			},
-			backStep(){
+			backStep() {
 				// 返回上一步
 				this.$parent.stepI -= 1
 			}
@@ -55,34 +57,40 @@
 </script>
 
 <style scoped="scoped" lang="scss">
-	.loginBoxs{
+	.loginBoxs {
 		margin-top: 5rem;
-		.inputItem{
+
+		.inputItem {
 			width: 100%;
 			padding: 2rem 0;
 			border-bottom: 1px solid #BFBFBF;
 			display: flex;
 			justify-content: flex-start;
 			align-items: center;
-			.icon{
+
+			.icon {
 				font-size: 2.6rem;
 				margin-right: 2rem;
 				color: #999999;
 			}
-			.iconImg{
+
+			.iconImg {
 				width: 2.6rem;
 			}
-			.inputs{
+
+			.inputs {
 				border: none;
 				outline: none;
 				width: 29rem;
 			}
 		}
-		.btnBox{
+
+		.btnBox {
 			display: flex;
 			justify-content: space-between;
 		}
-		.login{
+
+		.login {
 			width: 46%;
 			background: #34A1FF;
 			color: #FBF9FA;
@@ -95,5 +103,4 @@
 			// cursor: pointer;
 		}
 	}
-	
 </style>

@@ -1,4 +1,5 @@
 import {http} from './http.js'
+import qs from 'qs'
 const request = {
 	// getCode获取登陆验证码
 	getCode:(url, params) => http({
@@ -19,8 +20,7 @@ const request = {
 	postForm:(url, data = {}) => http({
 	  url:url,
 	  method:'POST',
-	  data,
-	  postType: 1,
+	  data: qs.stringify(data),
 	  headers:{'Content-type': 'application/x-www-form-urlencoded'}
 	}),
 	// post请求，json
@@ -28,7 +28,6 @@ const request = {
 	  url:url,
 	  method:'POST',
 	  data,
-	  postType: 0,
 	  headers:{'Content-type': 'application/json; charset=utf-8'}
 	}),
 	// GET请求，上传文件
@@ -36,7 +35,6 @@ const request = {
 	  url:url,
 	  method:'POST',
 	  data,
-	  postType: 0,
 	  headers:{'Content-type': 'multipart/form-data;'},
 	  processData: false,
 	  contentType: false

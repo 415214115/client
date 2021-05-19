@@ -10,14 +10,14 @@
 				</div>
 				<div class="functionModule">
 					<div class="moduleList" v-for="item in functionModule" :key="item.id"
-						:style="{background: item.bgColor}" @click="updateMsg(item.id)">
+						:style="{background: item.bgColor}">
 						<div class="moduleBox">
 							<el-image class="moduleIcon" :src="item.icon" fit="cover"></el-image>
 							<div class="moduleMsg">
 								<div class="moduleTitle">{{ item.title }}</div>
 								<div class="moduleVal">{{ item.val }}</div>
 							</div>
-							<div class="moduleBtn">
+							<div class="moduleBtn" @click="updateMsg(item.id)">
 								<span class="moduleBtnText">{{ item.btnText }}</span>
 								<i class="btnIcons" :class="item.btnIcon"></i>
 							</div>
@@ -146,7 +146,7 @@
 
 		.functionModule {
 			.moduleList {
-				width: 34rem;
+				width: 26%;
 				height: 14rem;
 				border-radius: 10px;
 				background: red;
