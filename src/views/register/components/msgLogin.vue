@@ -44,19 +44,19 @@
 				if (!this.logins.phone || !this.logins.code) {
 					this.$alert('手机号或验证码不能为空')
 				} else {
-					this.$store.commit('setBtnHandle')
+					// this.$store.commit('setBtnHandle')
 
 					this.$request.postJson('/common/checkCode', {
 						phone: this.logins.phone,
 						code: this.logins.code
 					}).then(res => {
 						if (res.code == 200) {
-							this.$store.commit('setBtnHandle')
+							// this.$store.commit('setBtnHandle')
 							this.$parent.stepI += 1
 							this.logins.code = ''
 						}
 					}).catch(e => {
-						this.$store.commit('setBtnHandle')
+						// this.$store.commit('setBtnHandle')
 						this.$alert('验证码错误')
 					})
 				}
@@ -80,9 +80,9 @@
 					this.$request.get('/common/sendMessageForGetCode', {
 						phone: this.logins.phone
 					}).then(res => {
-						if (res.code == 200) {
-							console.log(res.data)
-						}
+						// if (res.code == 200) {
+						// 	console.log(res.data)
+						// }
 					}).catch(e => {
 						this.$message.error(e.msg)
 					})

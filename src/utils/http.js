@@ -5,11 +5,12 @@ import {
 	MessageBox,
 	Message
 } from 'element-ui'
-
+import store from '../store/index.js'
 // const URLafter = '/api'
 // const baseURL = 'http://192.168.0.106:9081'
 const baseURL = 'http://chenzhouhuang.test.utools.club'
 // create an axios instance
+console.log(store)
 export const http = axios.create({
 	// baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
 	baseURL: baseURL,
@@ -24,6 +25,9 @@ export const http = axios.create({
  */
 http.interceptors.request.use(config => {
 	const token = sessionStorage.getItem('token')
+	if(!store.state.handle.btnHandle){
+		store.commit('setBtnHandle')
+	}
 	// 请求携带token
 	if (token != '' && token != null) {
 		config.headers['token'] = token
@@ -37,6 +41,9 @@ http.interceptors.request.use(config => {
 }, error => {
 	// do something with request error
 	// console.log(error) // for debug
+	if(store.state.handle.btnHandle){
+		store.commit('setBtnHandle')
+	}
 	return Promise.reject(error)
 })
 
@@ -47,13 +54,22 @@ http.interceptors.response.use(response => {
 	const res = response.data
 	// console.log(response)
 	if(res.code && res.code != '200'){
-		Message.error(res.msg)
+		// Message.error(res.msg)
+		if(store.state.handle.btnHandle){
+			store.commit('setBtnHandle')
+		}
 		return Promise.reject(res)
 		// errorHandle(res.code, res.message)
+	}
+	if(store.state.handle.btnHandle){
+		store.commit('setBtnHandle')
 	}
 	return res
 }, error => {
 	//超时处理
+	if(store.state.handle.btnHandle){
+		store.commit('setBtnHandle')
+	}
 	if (String(error).indexOf('timeout') != -1) {
 		Message.error('请求超时!')
 		return

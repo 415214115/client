@@ -37,10 +37,10 @@
 				if (!this.logins.phone || !this.logins.code) {
 					this.$alert('手机号或验证码不能为空')
 				} else{
-					this.$store.commit('setBtnHandle')
+					// this.$store.commit('setBtnHandle')
 					setTimeout(()=>{
 						this.$store.commit('setToken', '123')
-						this.$store.commit('setBtnHandle')
+						// this.$store.commit('setBtnHandle')
 						this.$router.replace('/index')
 					},3000)
 				}

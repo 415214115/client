@@ -43,15 +43,15 @@
 		methods: {
 			submit() {
 				// 提交
-				console.log(this.$parent.$refs.phone.logins.phone)
-				console.log(this.$parent.$refs.user.user)
+				// console.log(this.$parent.$refs.phone.logins.phone)
+				// console.log(this.$parent.$refs.user.user)
 				const reg = $globalData.passwordReg
 				if (!reg.test(this.pwd.password) || !reg.test(this.pwd.repetition)) {
 					this.$alert('密码由6-10位大小写字母和数字组成，请正确输入')
 					return
 				}
 				if (this.pwd.password === this.pwd.repetition) {
-					this.$store.commit('setBtnHandle')
+					// this.$store.commit('setBtnHandle')
 					const phone = this.$parent.$refs.phone.logins.phone
 					const user = this.$parent.$refs.user.user
 					if (this.checked) {
@@ -63,13 +63,13 @@
 						}).then(res => {
 							if (res.code == 200) {
 								this.$message.success('注册成功，返回登录')
-								this.$store.commit('setBtnHandle')
+								// this.$store.commit('setBtnHandle')
 								setTimeout(() => {
 									this.$router.back()
 								}, 1000)
 							}
 						}).catch(e => {
-							this.$store.commit('setBtnHandle')
+							// this.$store.commit('setBtnHandle')
 							this.$message.error('注册失败')
 						})
 					} else {

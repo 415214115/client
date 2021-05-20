@@ -30,7 +30,7 @@
 				if (!this.logins.userName || !this.logins.password) {
 					this.$alert('用户名或密码不能为空')
 				} else{
-					this.$store.commit('setBtnHandle')
+					// this.$store.commit('setBtnHandle')
 					this.$request.postJson('/back/passwordLogin', {
 						name: this.logins.userName,
 						password: this.logins.password,
@@ -38,11 +38,11 @@
 					}).then(res=>{
 						if(res.code == 200){
 							this.$store.commit('setToken', res.data)
-							this.$store.commit('setBtnHandle')
+							// this.$store.commit('setBtnHandle')
 							this.$router.replace('/index')
 						}
 					}).catch(e=>{
-						this.$store.commit('setBtnHandle')
+						// this.$store.commit('setBtnHandle')
 						this.$message.error('登录失败')
 					})
 				}
