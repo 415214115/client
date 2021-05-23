@@ -108,7 +108,8 @@ export default {
 			dialogVisible: false,
 			formInline: {
 				
-			}
+			},
+			imageUrl: ''
         }
     },
     computed:{
@@ -144,7 +145,11 @@ export default {
 		},
 		uploadFile(file){
 			
-		}
+		},
+		nextStep(){
+			
+		},
+		cancel(){}
     }
 }
 </script>

@@ -19,7 +19,7 @@
 				</el-form>
 			</div>
 			<span slot="footer" class="dialog-footer">
-				<el-button size="mini" @click="cancel">取 消</el-button>
+				<el-button size="mini" @click="cancel" :loading="$store.state.handle.btnHandle">取 消</el-button>
 				<el-button size="mini" type="primary" @click="nextStep" :loading="$store.state.handle.btnHandle">下一步</el-button>
 			</span>
 		</el-dialog>
@@ -75,18 +75,22 @@
 				if (!this.formInline.code) {
 					this.$alert('验证码不能为空')
 				} else{
-					this.$store.commit('setBtnHandle')
-					setTimeout(()=>{
-						this.$store.commit('setBtnHandle')
-						// this.cancel()
-						if(this.type == 1){
-							this.dialogitem.newPhone = true
-						} else if(this.type == 2 || this.type == 4 || this.type == 6){
-							this.dialogitem.newMsg = true
-						} else if(this.type == 3 || this.type == 5){
-							this.dialogitem.newPwd = true
+					this.$request.postJson('/common/checkCode', {
+						phone: this.formInline.phone,
+						code: this.formInline.code
+					}).then(res => {
+						if (res.code == 200) {
+							if(this.type == 1){
+								this.dialogitem.newPhone = true
+							} else if(this.type == 2 || this.type == 4 || this.type == 6){
+								this.dialogitem.newMsg = true
+							} else if(this.type == 3 || this.type == 5){
+								this.dialogitem.newPwd = true
+							}
 						}
-					},1000)
+					}).catch(e => {
+						this.$alert('验证码错误')
+					})
 				}
 			},
 			getCode(){
@@ -103,6 +107,20 @@
 							this.isDisabled = true
 						}
 					}, 1000)
+					this.$request.get('/common/sendMessageForGetCode', {
+						phone: this.formInline.phone
+					}).then(res => {}).catch(e => {
+						this.$message.error(e.msg)
+					})
+			},
+			getUserInfo(){
+				this.$request.postJson('/back/getUserInfo').then(res=>{
+					if(res.code == 200){
+						// this.userInfo = res.data
+						this.$store.commit('setUserInfo', res.data)
+						this.$parent.getStoreUserInfo()
+					}
+				})
 			}
 		}
 	}

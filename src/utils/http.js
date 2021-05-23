@@ -10,7 +10,7 @@ import store from '../store/index.js'
 // const baseURL = 'http://192.168.0.106:9081'
 const baseURL = 'http://chenzhouhuang.test.utools.club'
 // create an axios instance
-console.log(store)
+// console.log(store)
 export const http = axios.create({
 	// baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
 	baseURL: baseURL,
@@ -24,7 +24,7 @@ export const http = axios.create({
  * 请求拦截器，
  */
 http.interceptors.request.use(config => {
-	const token = sessionStorage.getItem('token')
+	const token = store.state.users.token
 	if(!store.state.handle.btnHandle){
 		store.commit('setBtnHandle')
 	}

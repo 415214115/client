@@ -4,7 +4,8 @@ export const userCenter = {
 	component: () => import("@/views/userCenter/index.vue"),
 	meta: {
 		title: '个人中心',
-		icon: require('@/assets/image/defaultImg.png'),
+		// icon: require('@/assets/image/defaultImg.png'),
+		icon: 'el-icon-user-solid',
 		color: ''
 	}
 }

@@ -4,9 +4,9 @@
 			<template slot="content">
 				<div class="userHead">
 					<el-image class="userImages"
-						src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" fit="cover">
+						src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" fit="cover">
 					</el-image>
-					<div class="userName">呱呱</div>
+					<div class="userName">{{ userInfo.nickName?userInfo.nickName:userInfo.name }}</div>
 				</div>
 				<div class="functionModule">
 					<div class="moduleList" v-for="item in functionModule" :key="item.id"
@@ -15,7 +15,7 @@
 							<el-image class="moduleIcon" :src="item.icon" fit="cover"></el-image>
 							<div class="moduleMsg">
 								<div class="moduleTitle">{{ item.title }}</div>
-								<div class="moduleVal">{{ item.val }}</div>
+								<div class="moduleVal">{{ item.val?item.val:'未绑定' }}</div>
 							</div>
 							<div class="moduleBtn" @click="updateMsg(item.id)">
 								<span class="moduleBtnText">{{ item.btnText }}</span>
@@ -31,7 +31,7 @@
 				</div>
 			</template>
 		</card>
-		<phoneCode phone="17772447679" :type="updateType" v-if="phoneCode" ></phoneCode>
+		<phoneCode :phone="receiveCodePhone" :type="updateType" v-if="phoneCode" ></phoneCode>
 
 	</div>
 
@@ -50,7 +50,7 @@
 						title: '手机绑定',
 						icon: require('@/assets/image/userCenter/sj.png'),
 						btnText: '修改',
-						val: '123*****221',
+						val: '',
 						btnIcon: 'el-icon-arrow-right',
 						bgColor: '#81C881'
 					},
@@ -59,7 +59,7 @@
 						title: '微信绑定',
 						icon: require('@/assets/image/userCenter/wx.png'),
 						btnText: '修改',
-						val: 'weixin123',
+						val: '',
 						btnIcon: 'el-icon-arrow-right',
 						bgColor: '#E3A51C'
 					},
@@ -77,7 +77,7 @@
 						title: '收款支付宝',
 						icon: require('@/assets/image/userCenter/zfb.png'),
 						btnText: '修改',
-						val: '123*****221',
+						val: '',
 						btnIcon: 'el-icon-arrow-right',
 						bgColor: '#F9961E'
 					},
@@ -94,20 +94,21 @@
 						id: 6,
 						title: '收款银行卡',
 						icon: require('@/assets/image/userCenter/yhk.png'),
-						btnText: '更多',
-						val: '1张',
+						btnText: '修改',
+						val: '',
 						btnIcon: 'el-icon-arrow-right',
 						bgColor: '#BD5A5A'
 					}
 				],
 				phoneCode: false,
-				updateType: ''
+				updateType: '',
+				userInfo: '',
+				receiveCodePhone: ''
 			}
 		},
 		mounted() {
-
+			this.getStoreUserInfo()
 		},
-		watch: {},
 		methods: {
 			updateMsg(id){
 				/**
@@ -117,6 +118,58 @@
 				if(this.updateType){
 					this.phoneCode = true
 				}
+			},
+			getStoreUserInfo(){
+				let userInfo = this.$store.state.users.userInfo
+				if(userInfo){
+					this.userInfo = userInfo
+					this.initData()
+				}
+				console.log(userInfo)
+			},
+			initData(){
+				// 电话号码脱敏
+				let phone = this.userInfo.phone.split('')
+				let phoneData = []
+				phone.forEach((v, i)=>{
+					if(i>2&&i<7){
+						phoneData.push('*')
+					} else {
+						phoneData.push(v)
+					}
+				})
+				this.functionModule[0].val = phoneData.join('') // 电话
+				this.receiveCodePhone = phoneData.join('')
+				this.functionModule[1].val = this.userInfo.weChat?this.userInfo.weChat:'未绑定' // 微信
+				 // 支付宝脱敏
+				let alipayCardData = []
+				if(this.userInfo.alipayCard){
+					let alipayCard = this.userInfo.alipayCard.split('')
+					alipayCard.forEach((v, i)=>{
+						if(i>2&&i<(alipayCard.length-3)){
+							alipayCardData.push('*')
+						} else {
+							alipayCardData.push(v)
+						}
+					})
+				}
+				this.functionModule[3].val = alipayCardData.length>0?alipayCardData.join(''):'未绑定' // 支付宝
+				// 银行卡脱敏
+				let bankCardData = []
+				if(this.userInfo.bankNum){
+					let bankCard = this.userInfo.bankNum.split('')
+					bankCard.forEach((v, i)=>{
+						if(i>2&&i<(bankCard.length-3)){
+							if(i>2&&i<9){
+								bankCardData.push('*')
+							}
+						} else {
+							bankCardData.push(v)
+						}
+					})
+				}
+				this.functionModule[5].val = bankCardData.length>0?bankCardData.join(''):'未绑定' // 银行卡
+				this.$forceUpdate()
 			}
 		}
 	}
@@ -152,7 +205,7 @@
 				background: red;
 				color: #FFFFFF;
 				display: inline-block;
-				margin-left: 6rem;
+				margin-left: 3.1%;
 				margin-right: 6rem;
 				margin-top: 9rem;
 				padding: 4rem 2rem;

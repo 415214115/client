@@ -21,7 +21,9 @@ Vue.prototype.$api = api
 // 全局变量
 import globalData from './utils/global.js'
 Vue.prototype.$globalData = globalData
-
+// 公共函数
+import publicFonc from './utils/publicFonc.js'
+Vue.prototype.$publicFonc = publicFonc
 
 import VueWechatTitle from "vue-wechat-title"
 Vue.use(VueWechatTitle)

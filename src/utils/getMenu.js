@@ -1,72 +1,63 @@
-import {home} from '../router/module/home.js' // 首页
-import {userCenter} from '../router/module/userCenter.js' // 个人中心
-import {invite} from '../router/module/invite.js' // 邀请返现
-import {operatorSite} from '../router/module/operatorSite.js' // 站点--操作员
-import {vipSite} from '../router/module/vipSite.js' // 站点--会员
-// import reconsitution from './reconsitution.js'
-// console.log( new Object(site)   )
+import {
+	home
+} from '../router/module/home.js' // 首页
+import {
+	userCenter
+} from '../router/module/userCenter.js' // 个人中心
+import {
+	invite
+} from '../router/module/invite.js' // 邀请返现
+import {
+	operatorSite
+} from '../router/module/operatorSite.js' // 站点--操作员
+import {
+	vipSite
+} from '../router/module/vipSite.js' // 站点--会员
+
+import request from './request.js'
 import store from '../store/index.js'
-const siteList = [
-	{
-		id: 1,
-		title: '台湾',
-		color: '#F0506E'
-	},
-	{
-		id: 2,
-		title: '马来西亚',
-		color: '#0670E3'
-	},
-	{
-		id: 3,
-		title: '泰国',
-		color: '#5CF908'
-	},
-	{
-		id: 4,
-		title: '菲律宾',
-		color: '#F0506E'
-	},{
-		id: 5,
-		title: '越南',
-		color: '#F0506E'
-	},{
-		id: 6,
-		title: '新加坡',
-		color: '#F0506E'
-	}
-	
+
+const siteListColor = ['#DEB19D', '#E4AF58', '#6BE458', '#68A21D', '#1DA27C', '#A2911D', '#5B1DA2', '#A21D65',
+	'#721DA2', '#DEB19D', '#E4AF58', '#6BE458', '#68A21D', '#1DA27C', '#A2911D', '#5B1DA2', '#A21D65', '#721DA2'
 ]
 
 
-export default function leftMenus(){
-	let routerLists = []
-	
-	// console.log(operatorSite)
-	routerLists.push(home)
-	siteList.forEach(v => {
-	    // 登陆角色--------1会员，2操作员 
-	    let item = ''
-		if (store.state.users.loginRole == 1) {
-		    item = JSON.parse(JSON.stringify(vipSite))
-	    } else if (store.state.users.loginRole == 2) {
-		    item = JSON.parse(JSON.stringify(operatorSite))
-	    }
-		item.meta.title = v.title
-		item.meta.color = v.color
-		item.meta.id = v.id
-		item.children.forEach((c, i)=>{
-			c.path = `${c.path.split(':')[0]}${v.id}`
-			c.meta.id = v.id
-			
-		})
-		routerLists.push(item)
+export default function leftMenus() {
+	request.get('/config/getStationList').then(res => {
+		if (res.code == 200) {
+			const data = res.data
+			data.forEach((v, i) => {
+				v.title = v.name
+				v.color = siteListColor[i]
+			})
+			store.commit('setSiteList', data)
+		}
 	})
-	console.log(routerLists)
-	routerLists.push(invite)
-	routerLists.push(userCenter)
+	let routerLists = []
+	let siteList = store.state.users.siteList
+	routerLists.push(home)
+	if (siteList.length > 0) {
+		siteList.forEach(v => {
+			// 登陆角色--------2会员，1操作员 
+			let item = ''
+			if (store.state.users.loginRole == 2) {
+				item = JSON.parse(JSON.stringify(vipSite))
+			} else if (store.state.users.loginRole == 1) {
+				item = JSON.parse(JSON.stringify(operatorSite))
+			}
+			item.meta.title = v.title
+			item.meta.color = v.color
+			item.meta.id = v.id
+			item.children.forEach((c, i) => {
+				c.path = `${c.path.split(':')[0]}${v.id}`
+				c.meta.id = v.id
+
+			})
+			routerLists.push(item)
+		})
+		routerLists.push(invite)
+		routerLists.push(userCenter)
+	}
+
 	store.commit('setLeftMenu', routerLists)
 }
-
-
-

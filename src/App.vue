@@ -36,7 +36,11 @@ export default {
 	}
     .el-table{
                     border-radius: 3px;
+					
                 }
+				.el-table__row td{
+					text-align: center !important;
+				}
     .el-table th{
         text-align: center !important;
         color: #3B3939 !important;

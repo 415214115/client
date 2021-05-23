@@ -18,7 +18,7 @@
 			</el-form>
 		</div>
 		<span slot="footer" class="dialog-footer">
-			<el-button size="mini" @click="cancel">取 消</el-button>
+			<el-button size="mini" @click="cancel" :loading="$store.state.handle.btnHandle">取 消</el-button>
 			<el-button size="mini" type="primary" @click="nextStep" :loading="$store.state.handle.btnHandle">确定</el-button>
 		</span>
 	</el-dialog>
@@ -46,18 +46,41 @@
 				if (!this.formInline.phone || !this.formInline.code) {
 					this.$alert('手机号或验证码不能为空')
 				} else{
-					this.$store.commit('setBtnHandle')
-					setTimeout(()=>{
-						this.$store.commit('setBtnHandle')
-						// this.cancel()
-						this.$parent.cancel()
-					},1000)
+					// this.$store.commit('setBtnHandle')
+					this.$request.postJson('/common/checkCode', {
+						phone: this.formInline.phone,
+						code: this.formInline.code
+					}).then(res => {
+						if (res.code == 200) {
+							this.$request.postJson('/back/updatePhone', {
+								phone: this.$store.state.users.userInfo.phone,
+								newPhone: this.formInline.phone
+							}).then(res=>{
+								if(res.code == 200){
+									this.$message.success('修改成功')
+									this.$parent.getUserInfo()
+									this.$parent.cancel()
+								}
+							}).catch(e => {
+								this.$alert('修改失败')
+							})
+						}
+					}).catch(e => {
+						this.$alert('验证码错误')
+					})
+					
+					
+					// setTimeout(()=>{
+					// 	// this.$store.commit('setBtnHandle')
+					// 	// this.cancel()
+					// 	this.$parent.cancel()
+					// },1000)
 				}
 			},
 			getCode(){
 				// 获取验证码
-				const reg = /^1[3-9]\d{9}$/
-				if (this.logins.phone && reg.test(this.logins.phone)) {
+				const reg = $globalData.phoneReg
+				if (this.formInline.phone && reg.test(this.formInline.phone)) {
 					let time = $globalData.getCodeTime
 					const timer = setInterval(()=>{
 						if (time == 0) {
@@ -70,10 +93,16 @@
 							this.isDisabled = true
 						}
 					}, 1000)
+					this.$request.get('/common/sendMessageForGetCode', {
+						phone: this.formInline.phone
+					}).then(res => {}).catch(e => {
+						this.$message.error(e.msg)
+					})
 				} else{
 					this.$alert('请输入正确的手机号码')
 				}
 			}
+			
 		}
 	}
 </script>

@@ -79,11 +79,7 @@
 					}, 1000)
 					this.$request.get('/common/sendMessageForGetCode', {
 						phone: this.logins.phone
-					}).then(res => {
-						// if (res.code == 200) {
-						// 	console.log(res.data)
-						// }
-					}).catch(e => {
+					}).then(res => {}).catch(e => {
 						this.$message.error(e.msg)
 					})
 				} else {

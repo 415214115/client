@@ -3,15 +3,18 @@
 		<div class="msgBoxList tLeftMsg">
 			<div class="lmsgContent">
 				<div class="declaration">【功能介绍及规则说明】</div>
-				<div class="rightIntroduce">
-					<div class="rightTitle">
-						跨境电子商务是基于网络发展起来的，网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间
+				<div v-if="leftData && leftData.list.length > 0">
+					<div class="rightIntroduce" v-for="item in leftData.list">
+						<div class="rightTitle">
+							{{ item.title }}
+						</div>
+						<div class="rightTitleTime">
+							发布时间：{{ item.createTime }}
+						</div>
 					</div>
-					<div class="rightTitleTime">
-						发布时间：2021-5-11 11:34:05
-					</div>
+					<paginaTion :totalNum="leftData.total" @paginaClick="paginaClick"></paginaTion>
 				</div>
-				<paginaTion :totalNum="0" @paginaClick="paginaClick"></paginaTion>
+				<noData v-else></noData>
 			</div>
 		</div>
 		<div class="msgBoxList tRightMsg">
@@ -24,15 +27,20 @@
 					<input type="text" v-model="inputVal" maxlength="10">
 				</div>
 				<div class="inputMoney" style="font-size: 1.6rem;">
-					<span class="ltitleas">我需要支付的金额（人民币）：（<span>{{ isNaN(Number(inputVal))?'0': inputVal}}</span>+15)÷4+6=<span>{{ result }}RMB</span></span>
+					<span class="ltitleas">
+						我需要支付的金额（人民币）：（
+						<span>{{ isNaN(Number(inputVal))?'0': inputVal}}</span>+{{ arithmetic.customerPoundage }}
+						)÷{{ arithmetic.customerRate }}%+{{ arithmetic.customerServer }}=<span>{{ result }}RMB</span>
+					</span>
 				</div>
 				<div class="explain">
-					计算公式：（退款金额+银行手续费）÷ 汇率+服务费=需支付金额（人民币）
+					计算公式：（退款金额+银行手续费）÷ 汇率 + 服务费 = 需支付金额（人民币）
 				</div>
 				<div class="explain">
-					系数：银行手续费15元/笔（台币） 汇率：4 转账手续费：6元笔（人民币）
+					系数：银行手续费{{ arithmetic.customerPoundage }}元/笔（台币） 汇率：{{ arithmetic.customerRate }}% 转账手续费：{{ arithmetic.customerServer }}元笔（人民币）
 				</div>
 			</div>
+			<!-- 本土回款 -->
 			<div  v-if="types == 3">
 				<div class="inputMoney">
 					<span class="ltitleas">我需要回款的店铺数量：</span>
@@ -45,14 +53,17 @@
 				<div class="inputMoney" style="font-size: 1.6rem;">
 					<span class="ltitleas">
 						预计回款到账的金额（人民币）：
-						<span>{{ isNaN(Number(inputVal))?'0': inputVal}}</span>×(1-3%)÷4+<span>{{ isNaN(Number(dpInput))?'0': dpInput}}</span>×6=<span>{{ fund }}RMB</span>
+						<span>
+						{{ isNaN(Number(inputVal))?'0': inputVal}}</span>
+						×(1-{{ arithmetic.customerPoundage }}%)÷{{ arithmetic.customerRate }}+
+						<span>{{ isNaN(Number(dpInput))?'0': dpInput}}</span>×{{ arithmetic.customerServer }}=<span>{{ fund }}RMB</span>
 					</span>
 				</div>
 				<div class="explain">
 					计算公式：计算公式:回款金额×(1-百分比手续费)÷汇率+店铺数量×对账手续费/店
 				</div>
 				<div class="explain">
-					系数：百分比手续费3    汇率：4    转账手续费：6元/笔（人民币）
+					系数：百分比手续费{{ arithmetic.customerPoundage }}%    汇率：{{ arithmetic.customerRate }}    转账手续费：{{ arithmetic.customerServer }}元/笔（人民币）
 				</div>
 			</div>
 			
@@ -61,13 +72,20 @@
 </template>
 
 <script>
+	import noData from '../../../components/noData.vue'
 	export default {
 		props:['types'],
+		components:{
+			noData
+		},
 	    data(){
 	        return{
 	            inputVal: 200,
 				dpInput: 10,
-	            tableData: [{}]
+	            tableData: [{}],
+				leftData: '',
+				pageNum: 1,
+				arithmetic: ''
 	        }
 	    },
 	    computed:{
@@ -77,9 +95,9 @@
 					return '计算错误'
 				} else{
 					// 数字
-					const money = Number(this.inputVal) + 15
-					const parities = money / 4
-					const data = parities + 6
+					const money = Number(this.inputVal) + Number(this.arithmetic.customerPoundage)
+					const parities = money / (Number(this.arithmetic.customerRate) / 100)
+					const data = parities + Number(this.arithmetic.customerServer)
 					return data.toFixed(2)
 				}
 	        },
@@ -89,18 +107,58 @@
 					return '计算错误'
 				} else{
 					// 数字200×1-3%÷4+10×6
-					const money = Number(this.inputVal) * ( 1 - 0.03 ) / 4 + Number(this.dpInput) * 6
+					const money = Number(this.inputVal) * ( 1 - (Number(this.arithmetic.customerPoundage) / 100) ) / Number(this.arithmetic.customerRate) + Number(this.dpInput) * Number(this.arithmetic.customerServer)
 					return money.toFixed(2)
 				}
 	        },
+			pathId(){
+				return this.$route.params.id
+			}
 	    },
 		mounted() {
 			// console.log(this.types)
+			this.getLeftData()
+			this.getArithmetic()
+		},
+		watch:{
+			pathId(newData){
+				// 监听路由动态参数变化
+				this.getArithmetic(newData)
+			}
 		},
 	    methods:{
 	        paginaClick(val){
-	
-	        }
+	        	this.pageNum = val
+	        	this.getLeftData()
+	        },
+	        getLeftData(){
+	        	this.$request.postJson('/config/rule', {
+	        		pageSize: 1,
+	        		pageNum: this.pageNum
+	        	}).then(res=>{
+	        		if(res.code == 200){
+	        			this.leftData = res.data
+	        		}
+	        	})
+	        },
+			getArithmetic(data){
+				this.$request.get('/common/getRate', {
+					orderType: this.types - 1,
+					stationId: data?data:this.pathId
+				}).then(res=>{
+					if(res.code == 200){
+						if(res.data){
+							this.arithmetic = res.data
+						} else {
+							this.arithmetic = {
+								customerPoundage: 0,
+								customerRate: 0,
+								customerServer: 0
+							}
+						}
+					}
+				})
+			}
 	    }
 	}
 </script>

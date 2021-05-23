@@ -38,11 +38,23 @@
 					this.$alert('手机号或验证码不能为空')
 				} else{
 					// this.$store.commit('setBtnHandle')
-					setTimeout(()=>{
-						this.$store.commit('setToken', '123')
-						// this.$store.commit('setBtnHandle')
-						this.$router.replace('/index')
-					},3000)
+					this.$request.postJson('/back/messageLogin', {
+						phone: this.logins.phone,
+						messageCode: this.logins.code,
+						userType: 2
+					}).then(res=>{
+						if(res.code == 200){
+							this.$store.commit('setToken', res.data)
+							this.$router.replace('/index')
+						}
+					}).catch(e=>{
+						this.$alert(e.msg)
+					})
+					// setTimeout(()=>{
+					// 	this.$store.commit('setToken', '123')
+					// 	// this.$store.commit('setBtnHandle')
+					// 	this.$router.replace('/index')
+					// },3000)
 				}
 			},
 			getCode(){
@@ -63,11 +75,7 @@
 					}, 1000)
 					this.$request.get('/common/sendMessageForGetCode', {
 						phone: this.logins.phone
-					}).then(res => {
-						if (res.code == 200) {
-							console.log(res)
-						}
-					}).catch(e => {
+					}).then(res => {}).catch(e => {
 						this.$message.error(e.msg)
 					})
 				} else{

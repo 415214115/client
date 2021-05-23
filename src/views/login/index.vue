@@ -64,16 +64,16 @@
 			
 		},
 		mounted() {
-			this.$store.commit('setLoginRole', '1')
+			this.$store.commit('setLoginRole', '2')
 			this.$setMenu()
 		},
 		watch:{
 			isVipLogin(newData){
-				// 登陆角色--------1---true会员，2---false操作员 
+				// 登陆角色--------2---true会员，1---false操作员 
 				if (newData) {
-					this.$store.commit('setLoginRole', '1')
-				} else{
 					this.$store.commit('setLoginRole', '2')
+				} else{
+					this.$store.commit('setLoginRole', '1')
 				}
 				this.$setMenu()
 			}

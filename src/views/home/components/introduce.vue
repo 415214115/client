@@ -1,23 +1,25 @@
 <template>
 	<el-card :body-style="{ padding: '2rem 0' }">
-		<div class="listBox">
+		<div class="listBox" v-if="pageData.list&&pageData.list.length > 0">
 			<el-scrollbar wrap-class="scrollbar-wrapper" style="height: 104%;padding-left: 2rem;">
-				<div class="introduce" v-for="item in 10" :key="item">
-					<img src="../../../assets/image/defaultImg.png" alt="">
+				<div class="introduce" v-for="item in pageData.list" :key="item.id">
+					<img :src="item.img?item.img:$globalData.defaultImg" alt="">
 					<div class="rightIntroduce">
 						<div class="rightTitle">
-							跨境电子商务是基于网络发展起来的，网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间
+							{{ item.title }}
 						</div>
 						<div class="rightTitleTime">
-							发布时间：2021-5-11 11:34:05
+							发布时间：{{ item.createTime }}
 						</div>
 					</div>
 				</div>
 			</el-scrollbar>
 		</div>
+		<div v-else class="rightCardContent">
+			<div style="text-align: center;padding-top: 3rem;">暂无数据</div>
+		</div>
 		
-		
-		<paginaTion :totalNum="0" @paginaClick="paginaClick"></paginaTion>
+		<paginaTion :totalNum="pageData.total" @paginaClick="paginaClick"></paginaTion>
 	</el-card>
 </template>
 
@@ -25,12 +27,27 @@
 	export default{
 		data(){
 			return{
-				
+				pageNum: 1,
+				pageData: ''
 			}
+		},
+		mounted() {
+			this.getPageData()
 		},
 		methods:{
 			paginaClick(val){
-				console.log(val)
+				this.pageNum = val
+				this.getPageData()
+			},
+			getPageData(){
+				this.$request.postJson('/config/rule', {
+					pageSize: this.$globalData.pageSize,
+					pageNum: this.pageNum
+				}).then(res=>{
+					if(res.code == 200){
+						this.pageData = res.data
+					}
+				})
 			}
 		}
 	}

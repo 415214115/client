@@ -10,11 +10,11 @@
 			<div class="rightInfos">
 				<div class="rightInfosItem">
 					<img src="../../assets/image/home/rmb.png" alt="">
-					999999.99
+					{{ $store.state.users.userInfo.money?Number($store.state.users.userInfo.money).toFixed(2):0.00 }}
 				</div>
 				<div class="rightInfosItem">
 					<img src="../../assets/image/home/user.png" alt="">
-					呱呱
+					{{ $store.state.users.userInfo.nickName?$store.state.users.userInfo.nickName:$store.state.users.userInfo.name }}
 				</div>
 				<div class="rightInfosItem" @click="loginOut">
 					<img src="../../assets/image/home/out.png" style="margin-right: 0.5rem !important;" alt="">
@@ -37,18 +37,19 @@
 		},
 		data(){
 			return{
-				userInfo: ''
+				
 			}
 		},
 		mounted() {
-			let info = JSON.parse(sessionStorage.getItem('userInfo'))
-			if (info) {
-				this.userInfo = info
-			}
+			// let info = JSON.parse(sessionStorage.getItem('userInfo'))
+			// if (info) {
+			// 	this.userInfo = info
+			// }
 		},
 		methods:{
 			loginOut(){
 				// 清空所有缓存
+				this.$store.commit('setToken', '')
 				sessionStorage.clear()
 				this.$router.replace('/login')
 			},

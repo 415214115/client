@@ -19,7 +19,8 @@
 				<div  v-for="(item, index) in navSliderBar" :key="index">
 					<el-submenu :index="`${item.path}${index}`" v-if="item.children">
 						<template slot="title">
-							<img class="menuLftIcon" :src="item.meta.icon" v-if="item.meta.icon" style="width: 2rem;height: 2rem;" alt="">
+							<!-- <img class="menuLftIcon" :src="item.meta.icon" v-if="item.meta.icon" style="width: 2rem;height: 2rem;" alt=""> -->
+							<i class="menuLftIcon" :class="item.meta.icon" v-if="item.meta.icon"></i>
 							<div v-else class="menuTag" :style="{background:item.meta.color}"></div>
 							<span slot="title">{{ item.meta.title }}</span>
 						</template>
@@ -27,26 +28,30 @@
 							<div v-if="list.children">
 								<el-submenu :index="list.path">
 									<template slot="title">
-										<img class="menuLftIcon" :src="list.meta.icon" v-if="list.meta.icon" style="width: 2rem;height: 2rem;" alt="">
+										<!-- <img class="menuLftIcon" :src="list.meta.icon" v-if="list.meta.icon" style="width: 2rem;height: 2rem;" alt=""> -->
+										<i class="menuLftIcon" :class="list.meta.icon" v-if="list.meta.icon"></i>
 										<div v-else class="menuTag" :style="{background:list.meta.color}"></div>
 										<span slot="title">{{ list.meta.title }}</span>
 									</template>
 									<el-menu-item v-for="listItem in list.children" :key="listItem.name" v-show="!listItem.hidden" :index="`${listItem.path}`" :class="$route.path.includes(listItem.path.split('/')[2])&&$route.params.id==listItem.meta.id?'el-menubefore':''">
-										<img class="menuLftIcon" :src="listItem.meta.icon" v-if="listItem.meta.icon" style="width: 2rem;height: 2rem;" alt="">
+										<!-- <img class="menuLftIcon" :src="listItem.meta.icon" v-if="listItem.meta.icon" style="width: 2rem;height: 2rem;" alt=""> -->
+										<i class="menuLftIcon" :class="listItem.meta.icon" v-if="listItem.meta.icon"></i>
 										<div v-else class="menuTag" :style="{background:listItem.meta.color}"></div><span slot="title">{{ listItem.meta.title }}</span>
 									</el-menu-item>
 								</el-submenu>
 							</div>
 							<div v-else>
 								<el-menu-item :index="`${list.path}`" v-show="!list.hidden" :class="$route.path.includes(list.path.split('/')[2])&&$route.params.id==list.meta.id?'el-menubefore':''" @click="submenuItemClick(list)">
-									<img class="menuLftIcon" :src="list.meta.icon" v-if="list.meta.icon" style="width: 2rem;height: 2rem;" alt="">
+									<!-- <img class="menuLftIcon" :src="list.meta.icon" v-if="list.meta.icon" style="width: 2rem;height: 2rem;" alt=""> -->
+									<i class="menuLftIcon" :class="list.meta.icon" v-if="list.meta.icon"></i>
 									<div v-else class="menuTag" :style="{background:list.meta.color}"></div><span slot="title">{{ list.meta.title }}</span>
 								</el-menu-item>
 							</div>
 						</div>
 					</el-submenu>
 					<el-menu-item :index="item.path" v-else v-show="!item.hidden" :class="$route.path.includes(item.path)?'el-menubefore':''" @click="menuItemClick(item)">
-						<img class="menuLftIcon" :src="item.meta.icon" v-if="item.meta.icon" style="width: 2rem;height: 2rem;" alt="">
+						<!-- <img class="menuLftIcon" :src="item.meta.icon" v-if="item.meta.icon" style="width: 2rem;height: 2rem;" alt=""> -->
+						<i class="menuLftIcon" :class="item.meta.icon" v-if="item.meta.icon"></i>
 						<div v-else class="menuTag" :style="{background:item.meta.color}"></div>
 						<span slot="title">{{ item.meta.title }}</span>
 					</el-menu-item>
@@ -159,8 +164,8 @@
 	.menuLftIcon {
 		display: inline-block;
 		margin-right: 3.5rem;
-		width: 3.5rem;
-		height: 3.5rem;
+		/* width: 3.5rem; */
+		/* height: 3.5rem; */
 	}
 
 	.unfold {
