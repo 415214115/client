@@ -23,6 +23,7 @@ const siteListColor = ['#DEB19D', '#E4AF58', '#6BE458', '#68A21D', '#1DA27C', '#
 
 
 export default function leftMenus() {
+	var  siteList = []
 	request.get('/config/getStationList').then(res => {
 		if (res.code == 200) {
 			const data = res.data
@@ -30,11 +31,16 @@ export default function leftMenus() {
 				v.title = v.name
 				v.color = siteListColor[i]
 			})
+			siteList = data
+			setMenu(siteList)
 			store.commit('setSiteList', data)
 		}
 	})
+	
+}
+function setMenu(siteList){
 	let routerLists = []
-	let siteList = store.state.users.siteList
+	// let siteList = store.state.users.siteList
 	routerLists.push(home)
 	if (siteList.length > 0) {
 		siteList.forEach(v => {
@@ -51,13 +57,13 @@ export default function leftMenus() {
 			item.children.forEach((c, i) => {
 				c.path = `${c.path.split(':')[0]}${v.id}`
 				c.meta.id = v.id
-
+	
 			})
 			routerLists.push(item)
 		})
 		routerLists.push(invite)
 		routerLists.push(userCenter)
 	}
-
+	
 	store.commit('setLeftMenu', routerLists)
 }

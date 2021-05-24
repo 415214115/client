@@ -1,7 +1,7 @@
 <template>
 	<!-- 广告充值 -->
 	<div class="unluckily">
-		<topMsg types="2"></topMsg>
+		<topMsg types="2"  ref="topMsg"></topMsg>
 		<div class="cardTabel">
 			<el-card>
 				<div slot="header">
@@ -21,83 +21,85 @@
 						<el-button type="primary" size="mini" icon="el-icon-search" @click="search">搜索</el-button>
 					</div>
 				</div>
-				<el-table :data="tableData" border style="width: 100%;margin-top: 2rem;">
-					<el-table-column prop="date" label="订单编号"></el-table-column>
-					<el-table-column prop="date" label="店铺账号"></el-table-column>
-					<el-table-column prop="date" label="店铺密码"></el-table-column>
-					<el-table-column prop="date" label="充值金额"></el-table-column>
-					<el-table-column prop="date" label="支付费用"></el-table-column>
-					<el-table-column prop="date" label="订单计时"></el-table-column>
+				<el-table :data="pageData.list" border style="width: 100%;margin-top: 2rem;">
+					<el-table-column prop="orderNo" label="订单编号"></el-table-column>
+					<el-table-column prop="shopName" label="店铺账号"></el-table-column>
+					<el-table-column prop="shopPass" label="店铺密码"></el-table-column>
+					<el-table-column prop="topUpMonery" label="充值金额"></el-table-column>
+					<el-table-column prop="needPayMoney" label="支付费用"></el-table-column>
+					<el-table-column prop="createTime" label="订单计时"></el-table-column>
 					<el-table-column prop="date" label="操作"></el-table-column>
 					<el-table-column prop="date" label="反馈截图"></el-table-column>
 					<el-table-column prop="date" label="备注"></el-table-column>
 				</el-table>
 
-				<paginaTion :totalNum="0" @paginaClick="paginaClick"></paginaTion>
+				<paginaTion :totalNum="pageData.total" @paginaClick="paginaClick"></paginaTion>
 			</el-card>
 		</div>
+		<!-- 发布需求 -->
 		<el-dialog title="发布需求" :visible.sync="dialogVisible" :width="$globalData.dialogWidth">
 			<div>
 				<el-form label-position="right" :model="formInline" class="demo-form-inline" label-width="110px"
 					size="mini">
 					<el-form-item label="需求类型">
-						<el-radio-group v-model="formInline.radio1">
-							<el-radio-button label="待退款" disabled></el-radio-button>
-							<el-radio-button label="广告充值"></el-radio-button>
-							<el-radio-button label="本土回款" disabled></el-radio-button>
+						<el-radio-group v-model="formInline.demandType">
+							<el-radio-button label="1" disabled>待退款</el-radio-button>
+							<el-radio-button label="2">广告充值</el-radio-button>
+							<el-radio-button label="3" disabled>本土回款</el-radio-button>
 						</el-radio-group>
 					</el-form-item>
-					<div>
-						<!-- 通用 -->
-						<el-form-item label="店铺账号">
-							<el-input class="inputs" v-model="formInline.code" placeholder="店铺账号"></el-input>
-						</el-form-item>
-						<el-form-item label="店铺密码">
-							<el-input class="inputs" v-model="formInline.code" placeholder="店铺密码"></el-input>
-						</el-form-item>
-					</div>
-					<div>
+					
+					<div v-if="siteName == '印尼'">
 						<!-- 印尼 -->
 						<el-form-item label="平台虚拟账号">
-							<el-input class="inputs" v-model="formInline.code" placeholder="平台虚拟账号"></el-input>
+							<el-input class="inputs" v-model="formInline.virtualAccount" placeholder="平台虚拟账号"></el-input>
 						</el-form-item>
 					</div>
-					<div>
+					<div v-else-if="siteName == '越南'">
 						<!-- 越南 -->
 						<el-form-item label="收款二维码">
 							<el-upload class="avatar-uploader" action="#" :show-file-list="false"
 								:http-request="uploadFile">
-								<img v-if="imageUrl" :src="imageUrl" class="avatar">
+								<img v-if="formInline.codeImg" :src="formInline.codeImg" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 								<div class="el-upload__tip" slot="tip">只支持.jpg 格式</div>
 							</el-upload>
 						</el-form-item>
 					</div>
+					<div v-else>
+						<!-- 通用 -->
+						<el-form-item label="店铺账号">
+							<el-input class="inputs" v-model="formInline.shopName" placeholder="店铺账号"></el-input>
+						</el-form-item>
+						<el-form-item label="店铺密码">
+							<el-input class="inputs" v-model="formInline.shopPass" placeholder="店铺密码"></el-input>
+						</el-form-item>
+					</div>
 					<el-form-item label="备注">
-						<el-input class="inputs" type="textarea" autosize v-model="formInline.code" placeholder="备注">
+						<el-input class="inputs" type="textarea" autosize v-model="formInline.customerMark" placeholder="备注">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="充值金额">
-						<el-input class="inputs" v-model="formInline.code" placeholder="充值金额"></el-input><span
+						<el-input class="inputs" v-model="formInline.topUpMonery" placeholder="充值金额"  @blur="getPayMoney"></el-input><span
 							class="inputTip">请输入当地货币数量！</span>
 					</el-form-item>
 					<el-form-item label="支付方式">
-						<el-radio-group v-model="formInline.radio">
-							<el-radio :label="3">支付宝</el-radio>
-							<el-radio :label="6">余额</el-radio>
+						<el-radio-group v-model="formInline.payAway">
+							<el-radio label="1">支付宝</el-radio>
+							<el-radio label="0">余额</el-radio>
 						</el-radio-group>
 					</el-form-item>
 					<el-form-item label="需支付">
-						<span class="aerobe">5523.00元</span>
+						<span class="aerobe">{{Number(payMoney).toFixed(2)}}元</span>
 					</el-form-item>
 					<el-form-item label="">
-						<div><span class="inputTip">订单计算规则：退款金额*（1-手续费％）÷汇率-流水笔数*对账手续费</span></div>
-						<div><span class="inputTip">手续费：3 汇率：4 手续费：5</span></div>
+						<div><span class="inputTip">订单计算规则：(充值金额+银行手续费）÷ 汇率 + 服务费 = 需支付金额（人民币）</span></div>
+						<div><span class="inputTip">手续费：{{ arithmetic.customerPoundage }} 汇率：{{ arithmetic.customerRate }}% 对账手续费：{{ arithmetic.customerServer }}</span></div>
 					</el-form-item>
 				</el-form>
 			</div>
 			<span slot="footer" class="dialog-footer">
-				<el-button size="mini" @click="cancel">取 消</el-button>
+				<el-button size="mini" @click="cancel" :loading="$store.state.handle.btnHandle">取 消</el-button>
 				<el-button size="mini" type="primary" @click="nextStep" :loading="$store.state.handle.btnHandle">支付
 				</el-button>
 				<div style="margin-top: 1rem;">仅支持 支付宝 或者 余额支付 </div>
@@ -114,7 +116,6 @@
 		data() {
 			return {
 				inputVal: 200,
-				tableData: [{}],
 				navList: [ // '进行中','已反馈', '已完结', '有异议'
 					{
 						id: 1,
@@ -133,26 +134,38 @@
 						title: '有异议'
 					}
 				],
-				navIndex: 0,
+				navIndex: 1,
 				dialogVisible: false,
 				formInline: {
-
+					demandType: '2',
+					shopName: '' ,// 店铺账号
+					shopPass: '' ,// 店铺密码
+					customerMark: '' ,// 客户备注
+					topUpMonery: '' ,// 充值金额
+					payAway: '' ,// 支付方式（0 余额 1 支付宝）
+					// 印尼
+					virtualAccount: '' ,// 虚拟账户
+					// 越南
+					codeImg: '' ,// 二维码图片
+					stationId: '' , // 站点id
+					needPayMoney: ''
 				},
+				arithmetic: '',
+				siteName: '', // 站点名称
+				payMoney: '',
+				pageData: '',
 				postData: {
 					keyWords: '',
+					orderStatus: '1', // 订单状态0 未接单 1 执行中 2 完成 3 有争议 4 带上传凭证
+					orderType: '0', // 订单类型 0 退款 1 充值 2 回款
+					userType: '1', // 用户类型 1 用户 2 操作员
 					pageNum: 1,
 					pageSize: $globalData.pageSize
 				},
-				imageUrl: ''
+				// imageUrl: ''
 			}
 		},
 		computed: {
-			result() {
-				const money = Number(this.inputVal) + 15
-				const parities = money / 4
-				const data = parities + 6
-				return data
-			},
 			pathId() {
 				return this.$route.params.id
 			}
@@ -160,30 +173,119 @@
 		watch: {
 			pathId(newData) {
 				// 监听路由动态参数变化
-				console.log(newData)
-			}
+				// console.log(newData)
+				this.formInline.stationId = newData
+				this.siteMsg()
+				this.postData.pageNum = 1
+				this.getPageData()
+			},
+			dialogVisible(newData) {
+				if (newData) {
+					this.formInline.shopName = ''
+					this.formInline.shopPass = ''
+					this.formInline.bankNo = ''
+					this.formInline.customerMark = ''
+					this.formInline.topUpMonery = ''
+					this.formInline.payAway = ''
+					this.formInline.virtualAccount = ''
+					this.formInline.codeImg = ''
+				}
+			},
 		},
 		mounted() {
 			// 获取路由动态参数
-			console.log(this.pathId)
+			// console.log(this.pathId)
+			this.siteMsg()
+			this.getPageData()
+			this.formInline.stationId = this.pathId
 		},
 		methods: {
 			paginaClick(val) {
-
+				this.postData.pageNum = val
+				this.getPageData()
 			},
 			selectorNav(i) {
+				this.pageData = ''
 				this.navIndex = i
+				this.postData.orderStatus = i
+				this.postData.pageNum = 1
+				this.getPageData()
 			},
 			demand() {
 				this.dialogVisible = true
+				this.arithmetic = this.$refs.topMsg.arithmetic
 			},
 			uploadFile(file) {
-
+				const File = file.file
+				this.$publicFonc.uploadFile(File).then(res=>{
+					this.formInline.codeImg = res.data
+				})
 			},
 			nextStep() {
-
+				if(this.siteName == '印尼'){
+					if (!this.formInline.virtualAccount) {
+						this.$alert('请输入虚拟账户')
+						return
+					}
+				} else if(this.siteName == '越南'){
+					if (!this.formInline.codeImg) {
+						this.$alert('请上传二维码')
+						return
+					}
+				} else {
+					if (!this.formInline.shopName) {
+						this.$alert('请输入店铺账号')
+						return
+					} else if (!this.formInline.shopPass){
+						this.$alert('请输入店铺密码')
+						return
+					}
+				}
+				if (!this.formInline.topUpMonery) {
+					this.$alert('请输入充值金额')
+					return
+				} else if (this.formInline.payAway === ''){
+					this.$alert('请选择支付方式')
+					return
+				}
+				this.$request.postJson('/topup/addTopUp', this.formInline).then(res => {
+					if (res.code == 200) {
+						if (this.formInline.payAway === '0') {
+							// 余额支付
+							this.$prompt('请输入交易密码', '提示', {
+								confirmButtonText: '确定',
+								cancelButtonText: '取消',
+								inputPattern: $globalData.passwordReg,
+								inputErrorMessage: '密码由6-10位大小写字母和数字组成，请正确输入',
+								inputType: 'password'
+							}).then(({
+								value
+							}) => {
+								this.$request.postJson('/topup/payTopYue', {
+									money: res.data.needPayMoney,
+									payPassword: value,
+									orderId: res.data.orderNo
+								}).then(data=>{
+									if(data.code == 200){
+										this.$message.success('支付成功，请耐心等待到账')
+										this.dialogVisible = false
+										this.postData.pageNum = 1
+										this.$publicFonc.getUserInfo()
+										this.getPageData()
+									}
+								}).catch(e=>{
+									this.$message.error(e.msg)
+								})
+							})
+						} else if (this.formInline.payAway === '1') {
+							// 支付宝支付
+						}
+					}
+				})
 			},
-			cancel() {},
+			cancel() {
+				this.dialogVisible = false
+			},
 			search() {
 				// 搜索
 				if (!this.postData.keyWords) {
@@ -191,6 +293,37 @@
 				}
 				this.postData.pageNum = 1
 				this.getPageData()
+			},
+			getPayMoney() {
+				// 获取需要支付的金额
+				if (this.formInline.topUpMonery) {
+					this.$request.postJson('/common/calculate', {
+						money: this.formInline.topUpMonery,
+						stationId: this.pathId,
+						orderType: this.formInline.demandType - 1,
+					}).then(res => {
+						if (res.code == 200) {
+							this.payMoney = res.data
+							this.formInline.needPayMoney = this.payMoney
+						}
+					})
+				}
+			},
+			siteMsg(){
+				// 获取站点信息
+				let siteList = this.$store.state.users.siteList
+				const site = siteList.filter(item => {
+					return item.id == this.pathId
+				})
+				this.siteName = site[0].name
+			},
+			getPageData() {
+				// 获取表格数据
+				this.$request.postJson('/topup/selectTopOrder', this.postData).then(res => {
+					if (res.code == 200) {
+						this.pageData = res.data
+					}
+				})
 			},
 		}
 	}

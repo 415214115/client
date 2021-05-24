@@ -23,7 +23,7 @@
 								<div class="qbBox rmbBox">
 									<img class="rmbImg" src="../../../assets/image/home/rmb.png" alt="">
 								</div>
-								{{ userInfo.money?Number(userInfo.money).toFixed(2):0.00 }}
+								{{ userInfo.money?moneys(userInfo.money):0.00 }}
 							</div>
 						</div>
 						<div class="btnS nth1" @click="recharge">充值</div>
@@ -167,6 +167,20 @@
 				},
 				imageUrl: '',
 				userInfo: ''
+			}
+		},
+		computed:{
+			moneys(){
+				return function (Money) {
+					let money = Number(Money)
+					if(money > 9999){
+						return (money/10000).toFixed(2) + '万'
+					} else if(money > 99999999){
+						return (money/100000000).toFixed(2) + '亿'
+					} else {
+						return money.toFixed(2)
+					}
+				}
 			}
 		},
 		mounted() {

@@ -65,7 +65,7 @@
 		},
 		mounted() {
 			this.$store.commit('setLoginRole', '2')
-			this.$setMenu()
+			// this.$setMenu()
 		},
 		watch:{
 			isVipLogin(newData){

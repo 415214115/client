@@ -62,6 +62,7 @@
 </template>
 
 <script>
+	// import leftMenus from '../../utils/getMenu.js'
 	export default {
 		data() {
 			return {
@@ -73,6 +74,7 @@
 		mounted() {
 			// this.navSliderBar = this.$store.state.routers
 			// console.log(this.$store.state.menu)
+			this.$setMenu()
 		},
 		computed: {
 

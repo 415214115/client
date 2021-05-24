@@ -27,7 +27,18 @@ const publicFonc = {
 	},
 	uploadFile: (file) => {
 		// 上传文件
-		console.log(file)
+		// console.log(file)
+		const formData = new FormData()
+		formData.append('fileList', file)
+		return new Promise((reslove, reject) => {
+			request.uploading('/upload/one/upLoadImg', formData).then(data=>{
+				if(data.code == 200){
+					reslove(data)
+				}
+			}).catch(e=>{
+				reject(e)
+			})
+		})
 	}
 }
 window.$publicFonc = publicFonc

@@ -13,10 +13,10 @@
 						<div class="handleList" v-for="item in navList" :key="item.id"
 							:class="navIndex==item.id?'selects':''" @click="selectorNav(item.id)">{{ item.title }}</div>
 					</div>
-					<div class="serchBox">
+					<!-- <div class="serchBox">
 						<el-input v-model="postData.keyWords" size="mini" placeholder="请输入银行账号、金额、备注"></el-input>
 						<el-button type="primary" size="mini" icon="el-icon-search" @click="search">搜索</el-button>
-					</div>
+					</div> -->
 				</div>
 
 				<el-table :data="pageData.list" border style="width: 100%;margin-top: 2rem;">
@@ -35,15 +35,15 @@
 							<div v-else>待反馈</div>
 						</template>
 					</el-table-column>
-					<el-table-column prop="date" label="操作">
+					<el-table-column prop="date" label="操作" width="170px">
 						<template slot-scope="scope">
 							<div v-if="navIndex == 1">待操作</div>
 							<div v-if="navIndex == 4">
-								<el-upload class="upload-demo" action="#" :show-file-list="false"
-									:http-request="uploadFile">
-									<el-button type="info" size="mini">未到账</el-button>
-								</el-upload>
-								<el-button type="primary" size="mini" style="margin-top: 1rem;">已到账</el-button>
+								<!-- <el-upload class="upload-demo" action="#" :show-file-list="false"
+									:http-request="uploadFile"> -->
+									<el-button type="info" size="mini" @click="notArrive(scope.row)">未到账</el-button>
+								<!-- </el-upload> -->
+								<el-button type="primary" size="mini" style="margin-top: 1rem;" @click="payment(scope.row)">已到账</el-button>
 							</div>
 							<div v-if="navIndex == 2">已完结</div>
 							<!-- <div v-if="navIndex == 3">
@@ -63,6 +63,32 @@
 				<paginaTion :totalNum="pageData.total" @paginaClick="paginaClick"></paginaTion>
 			</el-card>
 		</div>
+		<!-- 上传凭证 -->
+		<el-dialog title="上传凭证" :visible.sync="voucher" :width="$globalData.dialogWidth">
+		  <div>
+			  <el-form :model="image" class="demo-form-inline">
+			    <el-form-item label="上传凭证">
+			      <el-upload
+			        class="avatar-uploader"
+			        action="#"
+			        :show-file-list="false"
+			      	:http-request="uploadFile"
+			      	>
+			        <img v-if="image.imgs" :src="image.imgs" class="avatar">
+			        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+			      </el-upload>
+			    </el-form-item>
+			    <el-form-item label="备注">
+			      <el-input class="inputs" v-model="image.mark" placeholder="备注"></el-input>
+			    </el-form-item>
+			  </el-form>
+			  
+		  </div>
+		  <span slot="footer" class="dialog-footer">
+		    <el-button @click="dialogVisible = false" size="mini" :loading="$store.state.handle.btnHandle">取 消</el-button>
+		    <el-button type="primary" @click="determined" size="mini" :loading="$store.state.handle.btnHandle">确 定</el-button>
+		  </span>
+		</el-dialog>
 		<!-- 发布需求 -->
 		<el-dialog title="发布需求" :visible.sync="dialogVisible" :width="$globalData.dialogWidth">
 			<div>
@@ -104,9 +130,9 @@
 						<span class="aerobe">{{Number(payMoney).toFixed(2)}}元</span>
 					</el-form-item>
 					<el-form-item label="">
-						<div><span class="inputTip">订单计算规则：退款金额+银行手续费）÷ 汇率 + 服务费 = 需支付金额（人民币）</span></div>
+						<div><span class="inputTip">订单计算规则：(退款金额+银行手续费）÷ 汇率 + 服务费 = 需支付金额（人民币）</span></div>
 						<div><span class="inputTip">手续费：{{ arithmetic.customerPoundage }}
-								汇率：{{ arithmetic.customerRate }}% 手续费：{{ arithmetic.customerServer }}</span></div>
+								汇率：{{ arithmetic.customerRate }}% 服务费：{{ arithmetic.customerServer }}</span></div>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -128,7 +154,6 @@
 		data() {
 			return {
 				inputVal: 200,
-				tableData: [{}],
 				navList: [ // '进行中','已反馈', '已完结', '有异议'
 					{
 						id: 1,
@@ -149,6 +174,7 @@
 				],
 				navIndex: 1,
 				dialogVisible: false,
+				voucher: false,
 				formInline: {
 					stationId: '',
 					demandType: '1',
@@ -163,13 +189,18 @@
 				arithmetic: '',
 				pageData: '',
 				postData: {
-					orderStatus: '', // 订单状态0 未接单 1 执行中 2 完成 3 有争议 4 带上传凭证
+					orderStatus: '1', // 订单状态0 未接单 1 执行中 2 完成 3 有争议 4 带上传凭证
 					orderType: '0', // 订单类型 0 退款 1 充值 2 回款
 					userType: '1', // 用户类型 1 用户 2 操作员
 					pageNum: 1,
 					pageSize: $globalData.pageSize,
 					keyWords: '' // 用于搜索数据
 				},
+				image: {
+					imgs: '' ,// 上传的凭证图片
+					orderId: '',
+					mark: ''// 备注
+				}
 			}
 		},
 		computed: {
@@ -180,8 +211,9 @@
 		watch: {
 			pathId(newData) {
 				// 监听路由动态参数变化
-				console.log(newData)
 				this.formInline.stationId = newData
+				this.postData.pageNum = 1
+				this.getPageData()
 			},
 			dialogVisible(newData) {
 				if (newData) {
@@ -192,15 +224,51 @@
 					this.formInline.recordMoney = ''
 					this.formInline.payAway = ''
 				}
+			},
+			image(newData){
+				if (newData) {
+					this.image.imgs = ''
+					this.image.orderId = ''
+					this.image.mark = ''
+				}
 			}
 		},
 		mounted() {
 			// 获取路由动态参数
-			console.log(this.pathId)
 			this.formInline.stationId = this.pathId
 			this.getPageData()
 		},
 		methods: {
+			payment(row){
+				// 已到账
+				this.$request.postJson('/confirmRefundOrder', {
+					id: row.id
+				}).then(res=>{
+					if(this.postData.pageNum > 1){
+						this.postData.pageNum = Math.ceil((this.pageData.total-1)/$globalData.pageSize)
+					}
+					this.getPageData()
+				})
+			},
+			notArrive(row){
+				// 为到账
+				this.image.orderId = row.id
+				this.voucher = true
+			},
+			determined(){
+				// 为到账点击确定
+				if(!this.image.imgs){
+					this.$alert('请上传凭证')
+					return
+				}
+				this.$request.postJson('/dispute', this.image).then(res=>{
+					if(this.postData.pageNum > 1){
+						this.postData.pageNum = Math.ceil((this.pageData.total-1)/$globalData.pageSize)
+					}
+					this.getPageData()
+					this.voucher = false
+				})
+			},
 			paginaClick(val) {
 				this.postData.pageNum = val
 				this.getPageData()
@@ -287,7 +355,6 @@
 						} else if (this.formInline.payAway === '1') {
 							// 支付宝支付
 						}
-						console.log(res.data)
 					}
 				})
 			},
@@ -309,80 +376,83 @@
 			uploadFile(file) {
 				// 上传凭证
 				const File = file.file
-				this.$publicFonc.uploadFile(File)
-				// console.log(file)
+				this.$publicFonc.uploadFile(File).then(res=>{
+					this.image.imgs = res.data
+				})
 			}
 
 		}
 	}
 </script>
-<style lang="scss" scoped>
+<style scoped>
 	.unluckily {
 		width: 100%;
 
-		.cardTabel {
+		
+	}
+.cardTabel {
 			width: 100%;
 			margin-top: 2rem;
 
-			.issueTitle {
-				color: #3E3E3E;
-				font-size: 1.7rem;
-				font-weight: bold;
-			}
-
-			.issueBtn {
-				float: right;
-				margin-top: -.5rem;
-			}
-
-			.handleBoxtOP {
-				display: flex;
-				justify-content: space-between;
-				white-space: nowrap;
-
-				.handleBox {
-					display: flex;
-					justify-content: flex-start;
-					white-space: nowrap;
-
-					.handleList {
-						position: relative;
-						color: #999999;
-						font-size: 1.7rem;
-						padding: 1rem 0;
-						margin-right: 6rem;
-						cursor: pointer;
-					}
-
-					.selects {
-						&::after {
-							position: absolute;
-							content: '';
-							width: 100%;
-							height: 0.2rem;
-							background: #E60012;
-							left: 0;
-							bottom: 0;
-						}
-					}
-				}
-
-				.serchBox {
-					margin-right: 2rem;
-					width: 40rem;
-					display: flex;
-					justify-content: space-between;
-					white-space: nowrap;
-
-					button {
-						margin-left: 2rem;
-					}
-				}
-			}
+			
 
 		}
-	}
-
+		.issueTitle {
+			color: #3E3E3E;
+			font-size: 1.7rem;
+			font-weight: bold;
+		}
+		
+		.issueBtn {
+			float: right;
+			margin-top: -.5rem;
+		}
+		.handleBox {
+			display: flex;
+			justify-content: flex-start;
+			white-space: nowrap;
+				
+			
+		}
+		.handleList {
+			position: relative;
+			color: #999999;
+			font-size: 1.7rem;
+			padding: 1rem 0;
+			margin-right: 6rem;
+			cursor: pointer;
+		}
+			
+		.selects::after {
+				position: absolute;
+				content: '';
+				width: 100%;
+				height: 0.2rem;
+				background: #E60012;
+				left: 0;
+				bottom: 0;
+			}
+		.handleBoxtOP {
+			display: flex;
+			justify-content: space-between;
+			white-space: nowrap;
+		
+			
+		
+			
+		}
+		.serchBox {
+			margin-right: 2rem;
+			width: 40rem;
+			display: flex;
+			justify-content: space-between;
+			white-space: nowrap;
+				
+			
+		}
+		.serchBox button {
+			margin-left: 2rem;
+		}
 	.inputTip {
 		font-size: 1.2rem;
 		margin-left: 1rem;
@@ -398,4 +468,27 @@
 		color: #F44242;
 		font-weight: bold;
 	}
+	 .avatar-uploader>>>.el-upload {
+	    border: 1px dashed #d9d9d9;
+	    border-radius: 6px;
+	    cursor: pointer;
+	    position: relative;
+	    overflow: hidden;
+	  }
+	  .avatar-uploader .el-upload:hover {
+	    border-color: #409EFF;
+	  }
+	  .avatar-uploader-icon {
+	    font-size: 28px;
+	    color: #8c939d;
+	    width: 178px;
+	    height: 178px;
+	    line-height: 178px;
+	    text-align: center;
+	  }
+	  .avatar {
+	    width: 178px;
+	    height: 178px;
+	    display: block;
+	  }
 </style>
