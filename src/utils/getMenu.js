@@ -61,6 +61,7 @@ function setMenu(siteList){
 			})
 			routerLists.push(item)
 		})
+		// 邀请返现--------无页面
 		routerLists.push(invite)
 		routerLists.push(userCenter)
 	}

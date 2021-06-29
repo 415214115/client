@@ -26,11 +26,11 @@
 					<el-table-column prop="recordMoney" label="退款金额"></el-table-column>
 					<el-table-column prop="needPayMoney" label="支付费用"></el-table-column>
 					<el-table-column prop="createTime" label="订单计时"></el-table-column>
-					<el-table-column prop="customerMark" label="备注"></el-table-column>
+					<el-table-column prop="operationMark" label="备注"></el-table-column>
 					<el-table-column prop="date" label="反馈截图">
 						<template slot-scope="scope">
-							<div v-if="scope.row.customerImg">
-								<el-image :src="scope.row.customerImg" fit="cover"></el-image>
+							<div v-if="scope.row.operationImg">
+								<el-image :src="scope.row.operationImg" fit="cover"></el-image>
 							</div>
 							<div v-else>待反馈</div>
 						</template>
@@ -39,23 +39,10 @@
 						<template slot-scope="scope">
 							<div v-if="navIndex == 1">待操作</div>
 							<div v-if="navIndex == 4">
-								<!-- <el-upload class="upload-demo" action="#" :show-file-list="false"
-									:http-request="uploadFile"> -->
 									<el-button type="info" size="mini" @click="notArrive(scope.row)">未到账</el-button>
-								<!-- </el-upload> -->
 								<el-button type="primary" size="mini" style="margin-top: 1rem;" @click="payment(scope.row)">已到账</el-button>
 							</div>
 							<div v-if="navIndex == 2">已完结</div>
-							<!-- <div v-if="navIndex == 3">
-								<el-upload
-								  class="upload-demo"
-								  action="#"
-								  :show-file-list="false"
-								  :http-request="uploadFile"
-								 >
-								  <el-button type="success" size="mini">上传凭证</el-button>
-								</el-upload>
-							</div> -->
 						</template>
 					</el-table-column>
 				</el-table>
@@ -85,7 +72,7 @@
 			  
 		  </div>
 		  <span slot="footer" class="dialog-footer">
-		    <el-button @click="dialogVisible = false" size="mini" :loading="$store.state.handle.btnHandle">取 消</el-button>
+		    <el-button @click="voucher = false" size="mini" :loading="$store.state.handle.btnHandle">取 消</el-button>
 		    <el-button type="primary" @click="determined" size="mini" :loading="$store.state.handle.btnHandle">确 定</el-button>
 		  </span>
 		</el-dialog>
@@ -105,9 +92,9 @@
 						<el-input class="inputs" v-model="formInline.bankName" placeholder="银行名称"></el-input><span
 							class="inputTip">台湾地区可输入代码</span>
 					</el-form-item>
-					<el-form-item label="收款人姓名">
-						<el-input class="inputs" v-model="formInline.userName" placeholder="收款人姓名"></el-input><span
-							class="inputTip">台湾地区选填</span>
+					<el-form-item label="收款人姓名" v-if="siteName != '台湾'">
+						<el-input class="inputs" v-model="formInline.userName" placeholder="收款人姓名"></el-input>
+						<!-- <span class="inputTip">台湾地区选填</span> -->
 					</el-form-item>
 					<el-form-item label="收款账号">
 						<el-input class="inputs" v-model="formInline.bankNo" placeholder="收款账号"></el-input>
@@ -132,7 +119,7 @@
 					<el-form-item label="">
 						<div><span class="inputTip">订单计算规则：(退款金额+银行手续费）÷ 汇率 + 服务费 = 需支付金额（人民币）</span></div>
 						<div><span class="inputTip">手续费：{{ arithmetic.customerPoundage }}
-								汇率：{{ arithmetic.customerRate }}% 服务费：{{ arithmetic.customerServer }}</span></div>
+								汇率：{{ arithmetic.customerRate }} 服务费：{{ arithmetic.customerServer }}</span></div>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -194,13 +181,15 @@
 					userType: '1', // 用户类型 1 用户 2 操作员
 					pageNum: 1,
 					pageSize: $globalData.pageSize,
+					stationId: '',
 					keyWords: '' // 用于搜索数据
 				},
 				image: {
 					imgs: '' ,// 上传的凭证图片
 					orderId: '',
 					mark: ''// 备注
-				}
+				},
+				siteName: ''
 			}
 		},
 		computed: {
@@ -212,8 +201,10 @@
 			pathId(newData) {
 				// 监听路由动态参数变化
 				this.formInline.stationId = newData
+				this.postData.stationId = newData
 				this.postData.pageNum = 1
 				this.getPageData()
+				this.siteMsg()
 			},
 			dialogVisible(newData) {
 				if (newData) {
@@ -236,9 +227,19 @@
 		mounted() {
 			// 获取路由动态参数
 			this.formInline.stationId = this.pathId
+			this.postData.stationId = this.pathId
 			this.getPageData()
+			this.siteMsg()
 		},
 		methods: {
+			siteMsg(){
+				// 获取站点信息
+				let siteList = this.$store.state.users.siteList
+				const site = siteList.filter(item => {
+					return item.id == this.pathId
+				})
+				this.siteName = site[0].name
+			},
 			payment(row){
 				// 已到账
 				this.$request.postJson('/confirmRefundOrder', {
@@ -354,8 +355,17 @@
 							})
 						} else if (this.formInline.payAway === '1') {
 							// 支付宝支付
+							const form = res.data.body;
+							    $publicFonc.deleteExisting('#alipay') // 判断之前是否插入过#alipay
+							    let div = document.createElement('div');
+							    div.id = 'alipay';
+							    div.innerHTML = form;
+							    document.body.appendChild(div);
+							    document.querySelector('#alipay').children[0].submit(); // 执行后会唤起支付宝
 						}
 					}
+				}).catch(e=>{
+					this.$alert(e.msg)
 				})
 			},
 			getPayMoney() {

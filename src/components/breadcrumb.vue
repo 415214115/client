@@ -40,5 +40,6 @@
 	.el-breadcrumb__inner a{
 		color: #FFFFFF !important;
 		font-weight: 600;
+		/* font-size: 2rem; */
 	}
 </style>

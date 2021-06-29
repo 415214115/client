@@ -37,42 +37,50 @@
 		<el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :width="$globalData.dialogWidth">
 			<!-- 充值 -->
 			<div v-if="dialogTitle == '我要充值'">
-				<el-form label-position="right" :model="formInline" class="demo-form-inline" label-width="9rem"
+				<el-form label-position="right" :model="formInline" class="demo-form-inline" label-width="10rem"
 					size="mini">
-					<el-form-item label="充值方式">
-						<el-radio-group v-model="formInline.radio">
-							<el-radio :label="3">
+					<el-form-item label="充值方式"  v-if="userInfo.alipayCard">
+						<!-- <el-radio-group v-model="formInline.withdrawType">
+						    <el-radio :label="3">备选项</el-radio>
+						    <el-radio :label="6">备选项</el-radio>
+						    <el-radio :label="9">备选项</el-radio>
+						  </el-radio-group> -->
+						<el-radio-group v-model="formInline.withdrawType">
+							<el-radio  :label="0" >
 								<div class="radioItem">
-									<img src="../../../assets/image/defaultImg.png" alt="">
-									<span class="radioItemSpan">收款名称</span>
-									<span class="radioItemSpan">收款账户</span>
+									<img src="../../../assets/image/home/zhifubao.png" alt="">
+									<span class="radioItemSpan">{{ userInfo.nickName?userInfo.nickName:userInfo.name }}</span>
+									<span class="radioItemSpan">{{ userInfo.alipayCard }}</span>
 								</div>
 							</el-radio>
-							<el-radio :label="6">
+							<!-- <el-radio :label="2" v-if="userInfo.weChat">
 								<div class="radioItem">
-									<img src="../../../assets/image/defaultImg.png" alt="">
-									<span class="radioItemSpan">收款名称</span>
-									<span class="radioItemSpan">收款账户</span>
+									<img src="../../../assets/image/home/weixin.png" alt="">
+									<span class="radioItemSpan">{{ userInfo.nickName?userInfo.nickName:userInfo.name }}</span>
+									<span class="radioItemSpan">{{ userInfo.weChat }}</span>
 								</div>
 							</el-radio>
-							<el-radio :label="9">
+							<el-radio :label="1" v-if="userInfo.bankNum">
 								<div class="radioItem">
-									<img src="../../../assets/image/defaultImg.png" alt="">
-									<span class="radioItemSpan">户主</span>
+									<img src="../../../assets/image/home/yinhangka.png" alt="">
+									<span class="radioItemSpan">{{ userInfo.realName }}</span>
 								</div>
 								<div class="radioItem"  style="margin-top: 1rem;margin-left: 3rem;">
-									<span>招商银行重庆分行幸福社区支行</span>
+									<span>{{ userInfo.bankName }}</span>
 								</div>
 								<div class="radioItem"  style="margin-top: 1rem;margin-left: 3rem;">
-									<span>123456789012345678</span>
+									<span>{{ userInfo.bankNum }}</span>
 								</div>
-							</el-radio>
+							</el-radio> -->
 						</el-radio-group>
 					</el-form-item>
+					<div v-else style="margin-bottom: 2rem;">
+						<span @click="toUserCenter" style="cursor: pointer;font-size: 1.2rem;color: #F9961E;">请先绑定支付宝</span>
+					</div>
 					<el-form-item label="充值金额">
-						<el-input class="inputs" v-model="formInline.code" placeholder="1元起充"></el-input>
+						<el-input class="inputs" v-model="formInline.withdrawMoney" placeholder="1元起充"></el-input>
 					</el-form-item>
-					<el-row>
+					<!-- <el-row>
 						<el-col :span="12">
 							<el-form-item label="截图演示">
 								<img class="mimg" src="../../../assets/image/defaultImg.png" alt="">
@@ -91,7 +99,7 @@
 								</el-upload>
 							</el-form-item>
 						</el-col>
-					</el-row>
+					</el-row> -->
 				</el-form>
 			</div>
 			<!-- 提现 -->
@@ -143,14 +151,15 @@
 			</div>
 			<span slot="footer" class="dialog-footer" v-if="dialogTitle == '我要充值'">
 				<el-button size="mini" @click="cancel" :loading="$store.state.handle.btnHandle">取 消</el-button>
-				<el-button size="mini" type="primary" @click="confirm" :loading="$store.state.handle.btnHandle">确认已充值</el-button>
+				<el-button size="mini" type="primary" @click="confirm" :loading="$store.state.handle.btnHandle">确认充值</el-button>
 			</span>
 			<span slot="footer" class="dialog-footer" v-else>
-				<!-- <el-button size="mini" @click="cancel">取 消</el-button> -->
+				<el-button size="mini" @click="cancel">取 消</el-button>
 				<el-button size="mini" type="primary" @click="confirmWithdraw" :loading="$store.state.handle.btnHandle">确认提现</el-button>
 				<div>一般工作日24小时内到账</div>
 			</span>
 		</el-dialog>
+		
 	</div>
 </template>
 
@@ -158,11 +167,12 @@
 	export default {
 		data() {
 			return {
+				// radio: 3,
 				dialogVisible: false,
 				dialogTitle: '我要充值',
 				isShowBill: true,
 				formInline: {
-					withdrawType: '', //提现---类型
+					withdrawType: 0, //提现---类型
 					withdrawMoney: '' // 提现---金额
 				},
 				imageUrl: '',
@@ -220,9 +230,39 @@
 			},
 			cancel() {
 				// 取消
+				this.dialogVisible = false
 			},
 			confirm() {
-				// 确定
+				// 确定充值
+				if(this.formInline.withdrawType === ''){
+					this.$alert('请先选择充值类型')
+					return
+				}
+				if(this.formInline.withdrawMoney == ''){
+					this.$alert('请输入充值金额')
+					return
+				}
+				if(Number(this.formInline.withdrawMoney) < 1){
+					this.$alert('充值金额不能小于1')
+					return
+				}
+				this.$request.postJson('/back/congZhi', {
+					money: this.formInline.withdrawMoney,
+					withdrawalType: this.formInline.withdrawType
+				}).then(res => {
+					if (res.code == 200) {
+						// this.htmls = res.data.body
+						const form = res.data.body;
+						    $publicFonc.deleteExisting('#alipay') // 判断之前是否插入过#alipay
+						    let div = document.createElement('div');
+						    div.id = 'alipay';
+						    div.innerHTML = form;
+						    document.body.appendChild(div);
+						    document.querySelector('#alipay').children[0].submit(); // 执行后会唤起支付宝
+							
+				
+					}
+				})
 			},
 			confirmWithdraw(){
 				// 确定提现

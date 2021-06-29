@@ -16,7 +16,7 @@
 				currentPage: 1,
 				pageSize: $globalData.pageSize,
 				layouts: 'prev, pager, next',
-				pageTotal: 400,
+				pageTotal: 0,
 			}
 		},
 		methods: {

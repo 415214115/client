@@ -39,6 +39,16 @@ const publicFonc = {
 				reject(e)
 			})
 		})
+	},
+	paging: (total) => {
+		return Math.ceil((total-1)/$globalData.pageSize)
+	},
+	deleteExisting(id){
+		let div = document.getElementById(id)
+		if(div){
+			let body = document.getElementsByTagName('body')[0]
+			body.removeChild(div)
+		}
 	}
 }
 window.$publicFonc = publicFonc

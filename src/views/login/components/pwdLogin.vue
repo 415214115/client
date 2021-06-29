@@ -23,9 +23,20 @@
 			}
 		},
 		mounted() {
-			
+			const cookies = document.cookie
+			if(cookies){
+				this.getCookieValue('user', cookies)
+			}
 		},
 		methods:{
+			getCookieValue(name, cookies) {
+			  let result = cookies.match("(^|[^;]+)\\s*" + name + "\\s*=\\s*([^;]+)")
+			  let data = result ? JSON.parse(result.pop()) : ""
+			  if(data){
+				  this.logins.userName = data.userName
+				  this.logins.password = data.password
+			  }
+			},
 			login(){
 				if (!this.logins.userName || !this.logins.password) {
 					this.$alert('用户名或密码不能为空')
@@ -39,11 +50,14 @@
 						if(res.code == 200){
 							this.$store.commit('setToken', res.data)
 							// this.$store.commit('setBtnHandle')
+							let oDate = new Date()
+							oDate.setDate(oDate.getDate() + $globalData.cookieTime)
+							document.cookie = `user=${JSON.stringify(this.logins)};expires=${oDate};`
 							this.$router.replace('/index')
 						}
 					}).catch(e=>{
 						// this.$store.commit('setBtnHandle')
-						this.$message.error('登录失败')
+						this.$message.error(e&&e.msg?e.msg:'登陆失败')
 					})
 				}
 			}

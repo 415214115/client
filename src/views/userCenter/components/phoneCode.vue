@@ -44,7 +44,7 @@
 	import newMsg from './components/newMsg.vue'
 	import newPwd from './components/newPwd.vue'
 	export default {
-		props:['phone', 'type'],
+		props:['phone', 'phoneo', 'type'],
 		components:{
 			newPhone,
 			newMsg,
@@ -54,7 +54,7 @@
 			return{
 				dialogVisible: true,
 				formInline: {
-					phone: this.phone,
+					phone: this.phoneo,
 					code: ''
 				},
 				codeText: '获取验证码',
@@ -65,6 +65,9 @@
 					newPwd: false
 				}
 			}
+		},
+		mounted() {
+			// console.log(this.phoneo)
 		},
 		methods:{
 			cancel(){

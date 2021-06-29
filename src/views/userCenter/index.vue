@@ -7,6 +7,7 @@
 						src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" fit="cover">
 					</el-image>
 					<div class="userName">{{ userInfo.nickName?userInfo.nickName:userInfo.name }}</div>
+					<div class="userName" v-if="userInfo.userCode">邀请码：{{ userInfo.userCode }}</div>
 				</div>
 				<div class="functionModule">
 					<div class="moduleList" v-for="item in functionModule" :key="item.id"
@@ -31,7 +32,7 @@
 				</div>
 			</template>
 		</card>
-		<phoneCode :phone="receiveCodePhone" :type="updateType" v-if="phoneCode" ></phoneCode>
+		<phoneCode :phone="receiveCodePhone" :phoneo="receiveCodePhoneo" :type="updateType" v-if="phoneCode" ></phoneCode>
 
 	</div>
 
@@ -103,7 +104,8 @@
 				phoneCode: false,
 				updateType: '',
 				userInfo: '',
-				receiveCodePhone: ''
+				receiveCodePhone: '',
+				receiveCodePhoneo: ''
 			}
 		},
 		mounted() {
@@ -125,21 +127,26 @@
 					this.userInfo = userInfo
 					this.initData()
 				}
-				console.log(userInfo)
+				// console.log(userInfo)
 			},
 			initData(){
 				// 电话号码脱敏
-				let phone = this.userInfo.phone.split('')
-				let phoneData = []
-				phone.forEach((v, i)=>{
-					if(i>2&&i<7){
-						phoneData.push('*')
-					} else {
-						phoneData.push(v)
-					}
-				})
-				this.functionModule[0].val = phoneData.join('') // 电话
-				this.receiveCodePhone = phoneData.join('')
+				if(this.userInfo.phone){
+					let phone = this.userInfo.phone.split('')
+					this.receiveCodePhoneo = this.userInfo.phone
+					let phoneData = []
+					phone.forEach((v, i)=>{
+						if(i>2&&i<7){
+							phoneData.push('*')
+						} else {
+							phoneData.push(v)
+						}
+					})
+					this.functionModule[0].val = phoneData.join('') // 电话
+					this.receiveCodePhone = phoneData.join('')
+				}
+				
+				
 				this.functionModule[1].val = this.userInfo.weChat?this.userInfo.weChat:'未绑定' // 微信
 				 // 支付宝脱敏
 				let alipayCardData = []
@@ -198,8 +205,9 @@
 		}
 
 		.functionModule {
+			padding-left: 3%;
 			.moduleList {
-				width: 26%;
+				width: 25%;
 				height: 14rem;
 				border-radius: 10px;
 				background: red;

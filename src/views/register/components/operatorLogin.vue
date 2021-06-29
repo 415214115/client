@@ -59,18 +59,19 @@
 							phone: phone,
 							name: user.userName,
 							weChat: user.WeChat,
+							userCode: user.userCode,
 							password: this.pwd.password
 						}).then(res => {
 							if (res.code == 200) {
 								this.$message.success('注册成功，返回登录')
 								// this.$store.commit('setBtnHandle')
 								setTimeout(() => {
-									this.$router.back()
+									this.$router.push('/login')
 								}, 1000)
 							}
 						}).catch(e => {
 							// this.$store.commit('setBtnHandle')
-							this.$message.error('注册失败')
+							this.$message.error(e.msg)
 						})
 					} else {
 						this.$alert('请先阅读并同意某某协议')

@@ -8,12 +8,13 @@ import {
 import store from '../store/index.js'
 // const URLafter = '/api'
 // const baseURL = 'http://192.168.0.106:9081'
-const baseURL = 'http://chenzhouhuang.test.utools.club'
+// const baseURL = 'http://chenzhouhuang.test.utools.club'
 // create an axios instance
 // console.log(store)
 export const http = axios.create({
 	// baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-	baseURL: baseURL,
+	// baseURL: 'http://chenzhouhuang.test.utools.club',
+	baseURL: 'https://shopee100.com',
 	// withCredentials: true,
 	headers: {
 		'X-Requested-With': 'XMLHttpRequest',

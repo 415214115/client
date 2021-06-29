@@ -58,6 +58,15 @@ export const routes = [{
 		},
 		component: () => import('@/views/agreement/index.vue')
 	},
+	// {
+	// 	path: '/pay/:id',
+	// 	name: 'pay',
+	// 	meta: {
+	// 		title: '支付',
+	// 		icon: ''
+	// 	},
+	// 	component: () => import('@/views/pay/index.vue')
+	// },
 	{
 		path: '/',
 		name: 'layout',

@@ -2,7 +2,7 @@
 	<el-dialog :title="`修改${dialogTitle}`" :visible.sync="dialogVisible" :width="$globalData.dialogWidth"
 		:close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
 		<div>
-			<el-form label-position="right" :model="formInline" class="demo-form-inline" label-width="10rem" size="mini">
+			<el-form label-position="right" :model="formInline" class="demo-form-inline" label-width="12rem" size="mini">
 				<div v-if="type==6">
 					<el-form-item label="户主姓名">
 						<el-input class="inputs" v-model="formInline.adonai" placeholder="户主姓名"></el-input>
@@ -11,10 +11,18 @@
 						<el-input class="inputs" v-model="formInline.bankName" placeholder="开户行"></el-input>
 					</el-form-item>
 				</div>
-				<el-form-item :label="type==2?'微信号':type==4?'支付宝':type==6?'银行卡号':''">
+				<el-form-item :label="type==2?'微信号':type==4?'支付宝账号':type==6?'银行卡号':''">
 					<el-input class="inputs" v-model="formInline.inputVal"
-						:placeholder="type==2?'微信号':type==4?'支付宝':type==6?'银行卡号':''"></el-input>
+						:placeholder="type==2?'微信号':type==4?'支付宝账号':type==6?'银行卡号':''"></el-input>
 				</el-form-item>
+				<div v-if="type==4">
+					<el-form-item label="支付宝昵称">
+						<el-input class="inputs" v-model="formInline.alipayName" placeholder="支付宝昵称"></el-input>
+					</el-form-item>
+					<el-form-item label="真实名字">
+						<el-input class="inputs" v-model="formInline.realName" placeholder="真实名字"></el-input>
+					</el-form-item>
+				</div>
 			</el-form>
 		</div>
 		<span slot="footer" class="dialog-footer">
@@ -33,7 +41,9 @@
 				formInline: {
 					inputVal: '',
 					bankName: '',
-					adonai: ''
+					adonai: '',
+					alipayName: '',
+					realName: ''
 				},
 				dialogTitle: ''
 			}
@@ -69,12 +79,26 @@
 						// 支付宝
 						urls = '/back/updateAli'
 						data.alipayCard = this.formInline.inputVal
+						data.alipayName = this.formInline.alipayName
+						data.realName = this.formInline.realName
+						if(!this.formInline.alipayName || !this.formInline.realName){
+							this.$alert('必填项不能为空')
+							return
+						}
+						
 					} else if(this.type == 6){
 						// 银行卡
 						urls = '/back/updateBank'
 						data.bankNum = this.formInline.inputVal
 						data.bankName = this.formInline.bankName
 						data.realName = this.formInline.adonai
+						// console.log(this.formInline)
+						// return
+						if(!this.formInline.bankName || !this.formInline.adonai){
+							this.$alert('必填项不能为空')
+							return
+						}
+						
 					}
 					this.$request.postJson(urls, data).then(res=>{
 						if(res.code == 200){
@@ -83,7 +107,7 @@
 							this.$parent.cancel()
 						}
 					}).catch(e => {
-						this.$alert('修改失败')
+						this.$alert(e.msg)
 					})
 					
 					

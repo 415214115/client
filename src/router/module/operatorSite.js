@@ -16,7 +16,7 @@ export const operatorSite = {
 			component: () => import("@/views/operator/unluckily/index.vue"),
 			hidden: false,
 			meta: {
-				title: '待退款',
+				title: '代退款',
 				icon: '',
 				color: ''
 			}

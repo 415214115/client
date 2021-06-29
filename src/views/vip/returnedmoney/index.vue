@@ -9,39 +9,47 @@
                    <el-button type="warning" size="mini" class="issueBtn" @click="demand">发布需求</el-button>
                </div>
                <div class="handleBox">
-				   <div class="handleList" v-for="(item, index) in navList" :key="index" :class="navIndex==index?'selects':''" @click="selectorNav(index)">{{ item }}</div>
+				   <div class="handleList" v-for="item in navList" :key="item.id"
+				   	:class="navIndex==item.id?'selects':''" @click="selectorNav(item.id)">{{ item.title }}</div>
                </div>
-              <orderTabel v-if="navIndex == 0"></orderTabel>
-			  <proceedTabel v-if="navIndex == 1"></proceedTabel>
-			  <statementTabel v-if="navIndex == 2"></statementTabel>
-			  <disputeTabel v-if="navIndex == 3"></disputeTabel>
-			  <endTabel v-if="navIndex == 4"></endTabel>
+			   <!-- 回款订单 -->
+              <orderTabel v-if="navIndex == 0" :pageData="pageData"></orderTabel>
+			  <!-- 进行中 -->
+			  <proceedTabel v-if="navIndex == 1" :pageData="pageData"></proceedTabel>
+			  <!-- 待结算 -->
+			  <statementTabel v-if="navIndex == 4" :pageData="pageData"></statementTabel>
+			  <!-- 已完结 -->
+			  <disputeTabel v-if="navIndex == 2" :pageData="pageData"></disputeTabel>
+			  <!-- 有异议 -->
+			  <endTabel v-if="navIndex == 3" :pageData="pageData"></endTabel>
+			  <paginaTion :totalNum="pageData.total" @paginaClick="paginaClick"></paginaTion>
            </el-card>
        </div>
+	   <!-- 发布需求 -->
 	   <el-dialog title="发布需求" :visible.sync="dialogVisible" :width="$globalData.dialogWidth" >
 	   			<div>
 	   				<el-form label-position="right" :model="formInline" class="demo-form-inline" label-width="110px" size="mini">
 	   				  <el-form-item label="需求类型">
-	   						<el-radio-group v-model="formInline.radio1">
-	   					      <el-radio-button label="待退款" disabled></el-radio-button>
-	   					      <el-radio-button label="广告充值" disabled ></el-radio-button>
-	   					      <el-radio-button label="本土回款"  ></el-radio-button>
-	   					    </el-radio-group>
+	   						<el-radio-group v-model="formInline.demandType">
+	   							<el-radio-button label="1" disabled>待退款</el-radio-button>
+	   							<el-radio-button label="2" disabled>广告充值</el-radio-button>
+	   							<el-radio-button label="3" >本土回款</el-radio-button>
+	   						</el-radio-group>
 	   				  </el-form-item>
 	   				  <el-form-item label="店铺数量">
-	   				  		<el-input class="inputs"  v-model="formInline.code" placeholder="店铺数量"></el-input>
+	   				  		<el-input class="inputs"  v-model="formInline.shopNum" @input="getPayMoney" placeholder="店铺数量"></el-input>
 	   				  </el-form-item>
 	   				  <el-form-item label="回款金额">
-	   				  		<el-input class="inputs"  v-model="formInline.code" placeholder="大致回款金额总计（当地货币）"></el-input><span class="inputTip">台湾地区填写具体金额</span>
+	   				  		<el-input class="inputs"  v-model="formInline.estimatedAmount" @input="getPayMoney" placeholder="大致回款金额总计（当地货币）"></el-input><span class="inputTip">台湾地区填写具体金额</span>
 	   				  </el-form-item>
 	   				  <el-form-item label="预计到账">
-	   				  		<el-input class="inputs"  v-model="formInline.code" placeholder="预计到账（人民币）"></el-input>
+	   				  		<el-input class="inputs"  v-model="formInline.expectMoney" disabled="disabled" placeholder="预计到账（人民币）"></el-input>
 							<div>
 								<span class="inputTips">换算规则：（回款金额×（1-百分比手续费）÷汇率+店铺数量*对账手续费/店）</span>
 							</div>
 	   				  </el-form-item>
 	   				  <el-form-item label="备注">
-	   				  		<el-input class="inputs" type="textarea" autosize v-model="formInline.code" placeholder="备注"></el-input>
+	   				  		<el-input class="inputs" type="textarea" autosize v-model="formInline.remark" placeholder="备注"></el-input>
 	   				  </el-form-item>
 					  <el-form-item label="">
 					  		<div>
@@ -77,12 +85,47 @@ export default {
         return{
             inputVal: 200,
             tableData: [{}],
-			navList:['回款订单','进行中', '待结算', '争议中', '已完结'],
+			navList: [ // '进行中','已反馈', '已完结', '有异议'
+				{
+					id: 0,
+					title: '回款订单'
+				},
+				{
+					id: 1,
+					title: '进行中'
+				},
+				{
+					id: 4,
+					title: '待结算'
+				},
+				{
+					id: 2,
+					title: '已完结'
+				},
+				{
+					id: 3,
+					title: '有异议'
+				}
+			],
 			navIndex: 0,
 			dialogVisible: false,
 			formInline: {
-				
-			}
+				demandType: '3',
+				shopNum: '',
+				estimatedAmount: '',
+				expectMoney: '0',
+				remark: '',
+				stationId: ''
+			},
+			postData: {
+				orderStatus: '0', // 订单状态0 未接单 1 执行中 2 完成 3 有争议 4 带上传凭证
+				orderType: '2', // 订单类型 0 退款 1 充值 2 回款
+				userType: '1', // 用户类型 1 用户 2 操作员
+				pageNum: 1,
+				pageSize: $globalData.pageSize,
+				stationId: ''
+			},
+			pageData: ''
         }
     },
 	computed:{
@@ -94,22 +137,82 @@ export default {
 		pathId(newData){
 			// 监听路由动态参数变化
 			console.log(newData)
+			this.formInline.stationId = newData
+			this.postData.stationId = newData
+			this.postData.pageNum = 1
+			this.getPageData()
+		},
+		dialogVisible(newData){
+			if(newData){
+				this.formInline.shopNum = ''
+				this.formInline.estimatedAmount = ''
+				this.formInline.expectMoney = '0'
+				this.formInline.remark = ''
+			}
 		}
 	},
 	mounted() {
 		// 获取路由动态参数
 		console.log(this.pathId)
+		this.postData.stationId = this.pathId
+		this.formInline.stationId = this.pathId
+		this.getPageData()
 	},
     methods:{
+		getPageData(){
+			this.$request.postJson('/receivable/selectOrderByUser', this.postData).then(res=>{
+				if(res.code == 200){
+					this.pageData = res.data
+					this.dialogVisible = false
+				}
+			})
+		},
         paginaClick(val){
-
+			this.postData.pageNum = val
+			this.getPageData()
         },
 		selectorNav(i){
+			this.pageData = ''
 			this.navIndex = i
+			this.postData.orderStatus = i
+			this.postData.pageNum = 1
+			this.getPageData()
 		},
 		demand(){
 			this.dialogVisible = true
-		}
+		},
+		nextStep(){
+			if(!this.formInline.shopNum){
+				this.$alert('请输入店铺数量')
+				return
+			} else if(!this.formInline.estimatedAmount){
+				this.$alert('请输入回款金额')
+				return
+			}
+			this.$request.postJson('/receivable/add', this.formInline).then(res=>{
+				if(res.code == 200){
+					// console.log(res.data)
+					this.postData.pageNum = 1
+					this.dialogVisible = false
+					this.getPageData()
+				}
+			}).catch(e=>{
+				this.$message.error(e.msg)
+			})
+		},
+		getPayMoney() {
+			// 获取需要支付的金额
+			this.$request.postJson('/common/calculate', {
+				money: this.formInline.estimatedAmount?this.formInline.estimatedAmount:0,
+				stationId: this.pathId,
+				orderType: this.formInline.demandType - 1,
+				shopNum: this.formInline.shopNum?this.formInline.shopNum:0
+			}).then(res => {
+				if (res.code == 200) {
+					this.formInline.expectMoney = res.data
+				}
+			})
+		},
     }
 }
 </script>

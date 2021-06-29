@@ -48,7 +48,7 @@
 							this.$router.replace('/index')
 						}
 					}).catch(e=>{
-						this.$alert(e.msg)
+						this.$alert(e&&e.msg?e.msg:'登陆失败')
 					})
 					// setTimeout(()=>{
 					// 	this.$store.commit('setToken', '123')

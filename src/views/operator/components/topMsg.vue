@@ -3,16 +3,23 @@
 		<div class="msgBoxList tLeftMsg">
 			<div class="lmsgContent">
 				<div class="declaration">【功能介绍及规则说明】</div>
-				<div class="rightIntroduce">
-					<div class="rightTitle">
-						跨境电子商务是基于网络发展起来的，网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间
-						跨境电子商务是基于网络发展起来的，网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间网络空间相对于物理空间来说是一个新空间
-					</div>
-					<div class="rightTitleTime">
-						发布时间：2021-5-11 11:34:05
+				<div  v-if="leftData && leftData.list.length > 0">
+					<div class="rightIntroduce" v-for="(item, index) in leftData.list" :key="item.id" v-show="index<1">
+						<div>
+							<el-image class="leftImages" :src="item.img" fit="cover"></el-image>
+						</div>
+						<div style="width: 100%;">
+							<div class="rightTitle">
+								{{ item.title }}</div>
+							<div class="rightTitleTime">
+								发布时间：{{ item.createTime }}
+							</div>
+						</div>
+						
 					</div>
 				</div>
-				<paginaTion :totalNum="0" @paginaClick="paginaClick"></paginaTion>
+				
+				<!-- <paginaTion :totalNum="leftData.total" @paginaClick="paginaClick"></paginaTion> -->
 			</div>
 		</div>
 		<!-- <div class="msgBoxList tRightMsg">
@@ -67,7 +74,9 @@
 	        return{
 	            inputVal: 200,
 				dpInput: 10,
-	            tableData: [{}]
+	            tableData: [{}],
+				pageNum: 1,
+				leftData: '',
 	        }
 	    },
 	  //   computed:{
@@ -96,11 +105,23 @@
 	  //   },
 		mounted() {
 			// console.log(this.types)
+			this.getLeftData()
 		},
 	    methods:{
 	        paginaClick(val){
-	
-	        }
+	        	this.pageNum = val
+	        	this.getLeftData()
+	        },
+			getLeftData(){
+				this.$request.postJson('/config/rule', {
+					pageSize: 1,
+					pageNum: this.pageNum
+				}).then(res=>{
+					if(res.code == 200){
+						this.leftData = res.data
+					}
+				})
+			},
 	    }
 	}
 </script>
@@ -205,7 +226,14 @@
 				width: 80%;
 				margin-top: 2rem;
 				margin-bottom: 3rem;
-
+				display: flex;
+				justify-content: flex-start;
+				.leftImages{
+					width: 18rem;
+					height: 10rem;
+					margin-right: 2rem;
+					border-radius: 10px;
+				}
 				.rightTitle {
 					width: 100%;
 					margin-bottom: 1.6rem;

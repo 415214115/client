@@ -2,7 +2,7 @@
 	<div class="slideBar">
 		<div class="leftLogo flex" :class="!$store.state.slidBar.unfold?'unfold':'pack'">
 			<div v-if="!$store.state.slidBar.unfold"></div>
-			<img class="leftLogoImg" v-if="!$store.state.slidBar.unfold" src="../../assets/logo.png" alt="">
+			<img class="leftLogoImg" v-if="!$store.state.slidBar.unfold" src="../../assets/logo.svg" alt="">
 			<i class="elIcon" :class="!$store.state.slidBar.unfold?'el-icon-s-fold':'el-icon-s-unfold'"
 				:title="!$store.state.slidBar.unfold?'收起':'展开'" @click="setUnfold"></i>
 		</div>
@@ -16,7 +16,7 @@
 				:collapse="$store.state.slidBar.unfold"
 				class="el-menu-vertical-demo" :class="!$store.state.slidBar.unfold?'unfold':'pack'"
 			>
-				<div  v-for="(item, index) in navSliderBar" :key="index">
+				<div  v-for="(item, index) in $store.state.menu.leftMenu" :key="index">
 					<el-submenu :index="`${item.path}${index}`" v-if="item.children">
 						<template slot="title">
 							<!-- <img class="menuLftIcon" :src="item.meta.icon" v-if="item.meta.icon" style="width: 2rem;height: 2rem;" alt=""> -->
@@ -258,5 +258,6 @@
 	.el-submenu span {
 		font-weight: 600;
 		color: #333333 !important;
+		font-size: 16px;
 	}
 </style>

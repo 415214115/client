@@ -1,17 +1,33 @@
 <template>
-	<card class="rightCard" title="最新公告" leftIcon="el-icon-s-data" rightIcon="el-icon-more" iconDeg="90" iconColor="#8CA0B3" :bodyStyle="{ padding: '0px' }">
+	<card class="rightCard" title="合伙人排名" leftIcon="el-icon-user-solid" rightIcon="el-icon-more" iconColor="#8CA0B3" :bodyStyle="{ padding: '0px' }">
 		<template slot="content">
 			<div class="rightCardContent" v-if="pageData&&pageData.list.length > 0">
+			<!-- <div class="rightCardContent"> -->
 				<el-scrollbar wrap-class="scrollbar-wrapper" style="height: 100%;padding-bottom: 0;position: relative;top: 17px;">
-					<div v-for="(item, index) in pageData.list" :key="item.id">
+					<div v-for="(item, index) in pageData.list" :key="index">
 						<div class="rightCardContentList">
-							<i class="el-icon-message-solid rightCardContentIcon"></i>
-							<div class="rightCardContentNew" v-if="index < 5&&pageNum==1">NEW</div>
-							<div class="rightCardContentText" :style="{width: index < 5&&pageNum==1?'50%':'87%'}">
-								<div class="rightCardContentTextTitle">{{ item.title }}</div>
+							<!-- <i class="el-icon-message-solid rightCardContentIcon"></i> -->
+							<div class="rightCardContentListindex" :style="{'background': item.sort == 1?'#F44242':item.sort == 2?'#F9961E':item.sort == 3?'#81C881':'#8c8c8c'}">{{index + 1}}</div>
+							<!-- <div class="rightCardContentNew" v-if="index < 5&&pageNum==1">NEW</div> -->
+							<div class="rightCardContentText" :style="{'font-size':index < 3?'1.8rem':'1.4rem'}">
+								<div class="rightCardContentTextTitle">{{item.nickName?item.nickName:item.name}}</div>
+							</div>
+							<div class="rightCardContentText" :style="{'font-size':index < 3?'1.8rem':'1.4rem'}">
+								<div class="rightCardContentTextTitle">
+									<!-- 客户 -->
+									<div v-if="item.leaveType == 1">一星</div>
+									<div v-else-if="item.leaveType == 2">二星</div>
+									<div v-else-if="item.leaveType == 3">三星</div>
+									<div v-else-if="item.leaveType == 4">四星</div>
+									<div v-else-if="item.leaveType == 5">五星</div>
+									<div v-else>普通</div>
+								</div>
+							</div>
+							<div class="rightCardContentText" :style="{'font-size':index < 3?'1.8rem':'1.4rem'}">
+								<div class="rightCardContentTextTitle">{{item.money?item.money:0}}</div>
 							</div>
 						</div>
-						<div class="rightCardContentTextTime">{{ item.createTime }}</div>
+						<!-- <div class="rightCardContentTextTime">{{ item.createTime }}</div> -->
 						
 					</div>
 				</el-scrollbar>
@@ -39,11 +55,8 @@
 			}
 		},
 		mounted() {
-			setTimeout(()=>{
-				this.sitetId = this.$store.state.users.siteList[0].id
-				this.getPageData()
-			},300)
-			
+			this.sitetId = this.$store.state.users.siteList[0].id
+			this.getPageData()
 		},
 		methods:{
 			previousPage(){
@@ -65,7 +78,7 @@
 				}
 			},
 			getPageData(){
-				this.$request.postJson('/config/message', {
+				this.$request.postJson('/back/Paiming', {
 					pageSize: this.$globalData.pageSize,
 					pageNum: this.pageNum,
 					stationId: this.sitetId
@@ -116,13 +129,33 @@
 			justify-content: space-between;
 			align-items: baseline;
 			white-space: nowrap;
-			// margin-bottom: 2rem;
+			margin-bottom: 2rem;
 			cursor: pointer;
 			padding: 0 2rem;
+			
+			.rightCardContentListindex{
+				width: 3.2rem;
+				height: 3.2rem;
+				line-height: 3.2rem;
+				text-align: center;
+				background: #8c8c8c;
+				color: #FFFFFF;
+				border-radius: 100%;
+				
+			}
 		}
-		.rightCardContentList:last-child{
-			margin-bottom: 0px;
-		}
+		// .rightCardContentList:nth-child(1) .rightCardContentListindex{
+		// 	background: #F44242;
+		// }
+		// .rightCardContentList:nth-child(2) .rightCardContentListindex{
+		// 	background: #F9961E;
+		// }
+		// .rightCardContentList:nth-child(3) .rightCardContentListindex{
+		// 	background: #81C881;
+		// }
+		// .rightCardContentList:last-child{
+		// 	margin-bottom: 0px;
+		// }
 		.rightCardContentNew{
 			border-radius: 64px;
 			background: #F4C872;
@@ -135,9 +168,12 @@
 			margin-right: 1.5rem;
 			color: #8CA0B3;
 		}
-		/* .rightCardContentText{
-			width: 50%;
-		} */
+		.rightCardContentText{
+			width: 25%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
 		.rightCardContentTextTitle{
 			overflow: hidden;
 			text-overflow: ellipsis;

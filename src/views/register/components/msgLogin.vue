@@ -57,7 +57,7 @@
 						}
 					}).catch(e => {
 						// this.$store.commit('setBtnHandle')
-						this.$alert('验证码错误')
+						this.$alert(e.msg)
 					})
 				}
 			},

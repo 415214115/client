@@ -12,19 +12,27 @@
               <!-- <div class="handleBox">
 				   <div class="handleList" v-for="(item, index) in navList" :key="index" :class="navIndex==index?'selects':''" @click="selectorNav(index)">{{ item }}</div>
                </div> -->
-               <el-table :data="tableData" border style="width: 100%;margin-top: 2rem;">
-                    <el-table-column prop="date" label="订单编号"></el-table-column>
-                    <el-table-column prop="date" label="收款人姓名"></el-table-column>
-                    <el-table-column prop="date" label="银行名称/代码"></el-table-column>
-                    <el-table-column prop="date" label="退款金额"></el-table-column>
-                    <el-table-column prop="date" label="支付费用"></el-table-column>
-                    <el-table-column prop="date" label="订单时间"></el-table-column>
-					<el-table-column prop="date" label="操作"></el-table-column>
-                    <el-table-column prop="date" label="反馈截图"></el-table-column>
-                    <el-table-column prop="date" label="备注"></el-table-column>
+               <el-table :data="pageData.list" border style="width: 100%;margin-top: 2rem;">
+                    <el-table-column prop="orderNo" label="订单编号"></el-table-column>
+                    <el-table-column prop="userName" label="收款人姓名"></el-table-column>
+                    <el-table-column prop="bankName" label="银行名称/代码"></el-table-column>
+                    <el-table-column prop="recordMoney" label="退款金额"></el-table-column>
+                    <el-table-column prop="needPayMoney" label="支付费用"></el-table-column>
+                    <el-table-column prop="createTime" label="订单时间"></el-table-column>
+                    <el-table-column prop="date" label="反馈截图">
+						<template slot-scope="scope">
+							<el-image style="width: 64px; height: 64px" v-if="scope.row.customerImg" :src="scope.row.customerImg" fit="cover"></el-image>
+						</template>
+					</el-table-column>
+                    <el-table-column prop="customerMark" label="备注"></el-table-column>
+					<el-table-column prop="date" label="操作">
+						<template slot-scope="scope">
+							<el-button type="primary" size="small" @click="grabASingle(scope.row)" :loading="$store.state.handle.btnHandle">接单</el-button>
+						</template>
+					</el-table-column>
                 </el-table>
 
-		        <paginaTion :totalNum="0" @paginaClick="paginaClick"></paginaTion>
+		        <paginaTion :totalNum="pageData.total" @paginaClick="paginaClick"></paginaTion>
            </el-card>
        </div>
    </div>
@@ -41,6 +49,14 @@ export default {
             tableData: [{}],
 			// navList:['进行中','已反馈', '已完结', '有异议'],
 			// navIndex: 0
+			pageData: '',
+			postData: {
+				orderType: '0', // 订单类型 0 退款 1 充值 2 回款
+				userType: '3', // 用户类型 2 用户 3 操作员
+				stationId: '',
+				pageNum: 1,
+				pageSize: $globalData.pageSize
+			}
         }
     },
     computed:{
@@ -58,21 +74,48 @@ export default {
 		pathId(newData){
 			// 监听路由动态参数变化
 			console.log(newData)
+			this.postData.stationId = newData
+			this.postData.pageNum = 1
+			this.getPageData()
 		}
 	},
 	mounted() {
 		// 获取路由动态参数
 		console.log(this.pathId)
+		this.postData.stationId = this.pathId
+		this.getPageData()
 	},
     methods:{
         paginaClick(val){
-
+			this.postData.pageNum = val
+			this.getPageData()
         },
 		// selectorNav(i){
 		// 	this.navIndex = i
 		// },
 		toMyOrders(){
 			this.$router.push(`/operatorsite/operatorunluckily/operatororderbay/${this.pathId}`)
+		},
+		getPageData(){
+			this.$request.postJson('/selectCanTakeOrder', this.postData).then(res=>{
+				if(res.code==200 && res.data){
+					this.pageData = res.data
+				}
+			})
+		},
+		grabASingle(row){
+			// 抢单
+			this.$request.postJson('/opeTakeOrder', {
+				orderNo: row.orderNo
+			}).then(res=>{
+				if(res.code == 200){
+					this.$message.success('抢单成功')
+					if(this.postData.pageNum > 1){
+						this.postData.pageNum = $publicFonc.paging(this.postData.total)
+					}
+					this.getPageData()
+				}
+			})
 		}
     }
 }

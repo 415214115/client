@@ -1,8 +1,8 @@
 <template>
 	<el-card :body-style="{ padding: '2rem 0' }">
-		<div class="listBox" v-if="pageData.list&&pageData.list.length > 0">
+		<div class="listBox" v-if="pageData&&pageData.list.length > 0">
 			<el-scrollbar wrap-class="scrollbar-wrapper" style="height: 104%;padding-left: 2rem;">
-				<div class="introduce" v-for="item in pageData.list" :key="item.id">
+				<div class="introduce" v-for="(item, index) in pageData.list" :key="item.id" v-show="index<1">
 					<img :src="item.img?item.img:$globalData.defaultImg" alt="">
 					<div class="rightIntroduce">
 						<div class="rightTitle">
@@ -19,7 +19,7 @@
 			<div style="text-align: center;padding-top: 3rem;">暂无数据</div>
 		</div>
 		
-		<paginaTion :totalNum="pageData.total" @paginaClick="paginaClick"></paginaTion>
+		<!-- <paginaTion :totalNum="pageData.total" @paginaClick="paginaClick"></paginaTion> -->
 	</el-card>
 </template>
 
@@ -28,11 +28,16 @@
 		data(){
 			return{
 				pageNum: 1,
-				pageData: ''
+				pageData: '',
+				sitetId: ''
 			}
 		},
 		mounted() {
-			this.getPageData()
+			setTimeout(()=>{
+				this.sitetId = this.$store.state.users.siteList[0].id
+				this.getPageData()
+			},300)
+			
 		},
 		methods:{
 			paginaClick(val){
@@ -42,7 +47,8 @@
 			getPageData(){
 				this.$request.postJson('/config/rule', {
 					pageSize: this.$globalData.pageSize,
-					pageNum: this.pageNum
+					pageNum: this.pageNum,
+					stationId: this.sitetId
 				}).then(res=>{
 					if(res.code == 200){
 						this.pageData = res.data

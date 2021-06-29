@@ -9,6 +9,10 @@
 			<img src="../../../assets/image/userCenter/wx1.png" class="icon iconImg" alt="">
 			<input class="inputs" type="text" placeholder="联系微信" v-model="user.WeChat">
 		</div>
+		<div class="inputItem" style="margin-top: 4rem;">
+			<i class="el-icon-s-promotion icon iconImg"></i>
+			<input class="inputs" type="text" placeholder="邀请码" v-model="user.userCode">
+		</div>
 		<div class="btnBox">
 			<el-button class="login" type="primary" @click="backStep" :loading="$store.state.handle.btnHandle">返回上一步
 			</el-button>
@@ -24,7 +28,8 @@
 			return {
 				user: {
 					userName: '',
-					WeChat: ''
+					WeChat: '',
+					userCode: ''
 				}
 
 			}
@@ -33,7 +38,10 @@
 
 		},
 		mounted() {
-
+			// console.log(this.$route.query.code)
+			if(this.$route.query.code){
+				this.user.userCode = this.$route.query.code
+			}
 		},
 		methods: {
 			nextStep() {
